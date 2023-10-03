@@ -1,0 +1,102 @@
+[38;5;196m┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;196m│ #0   packages/my_todo/utils/net.dart 63:17                                    onError[0m
+[38;5;196m│ #1   packages/dio/src/dio_mixin.dart 429:22                                   handleError[0m
+[38;5;196m├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/core_patch.dart 942:28                get current[0m
+[38;5;196m│ ⛔ packages/dio/src/dio_mixin.dart 348:36                                            request[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 84:54                runBody[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 123:5                _async[0m
+[38;5;196m│ ⛔ packages/dio/src/dio_mixin.dart 331:33                                            request[0m
+[38;5;196m│ ⛔ packages/dio/src/dio_mixin.dart 99:12                                             post[0m
+[38;5;196m│ ⛔ packages/my_todo/utils/net.dart 29:17                                             post[0m
+[38;5;196m│ ⛔ packages/my_todo/api/user.dart 39:18                                              userSign[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 84:54                runBody[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 123:5                _async[0m
+[38;5;196m│ ⛔ packages/my_todo/api/user.dart 37:34                                              userSign[0m
+[38;5;196m│ ⛔ packages/my_todo/view/user/sign/sign_controller.dart 19:50                        login[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 84:54                runBody[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 123:5                _async[0m
+[38;5;196m│ ⛔ packages/my_todo/view/user/sign/sign_controller.dart 13:15                        login[0m
+[38;5;196m│ ⛔ packages/my_todo/view/user/sign/sign_page.dart 105:48                             <fn>[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 84:54                runBody[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 123:5                _async[0m
+[38;5;196m│ ⛔ packages/my_todo/view/user/sign/sign_page.dart 104:40                             <fn>[0m
+[38;5;196m│ ⛔ packages/flutter/src/material/ink_well.dart 1154:21                               handleTap[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/recognizer.dart 275:24                              invokeCallback[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/tap.dart 654:11                                     handleTapUp[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/tap.dart 311:5                                      [_checkUp][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/tap.dart 244:7                                      handlePrimaryPointer[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/recognizer.dart 630:9                               handleEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/pointer_router.dart 98:12                           [_dispatch][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/pointer_router.dart 143:9                           <fn>[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/private/linked_hash_map.dart 21:13          forEach[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/pointer_router.dart 141:17                          [_dispatchEventToRoutes][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/pointer_router.dart 127:7                           route[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 465:19                                 handleEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 445:14                                 dispatchEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/rendering/binding.dart 331:11                                dispatchEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 400:7                                  [_handlePointerEventImmediately][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 363:5                                  handlePointerEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 320:7                                  [_flushPointerEventQueue][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 293:9                                  [_handlePointerDataPacket][0m
+[38;5;196m│ ⛔ lib/_engine/engine/platform_dispatcher.dart 1251:13                               invoke1[0m
+[38;5;196m│ ⛔ lib/_engine/engine/platform_dispatcher.dart 269:5                                 invokeOnPointerDataPacket[0m
+[38;5;196m│ ⛔ lib/_engine/engine/pointer_binding.dart 168:39                                    [_onPointerData][0m
+[38;5;196m│ ⛔ lib/_engine/engine/pointer_binding.dart 791:20                                    <fn>[0m
+[38;5;196m│ ⛔ lib/_engine/engine/pointer_binding.dart 720:14                                    <fn>[0m
+[38;5;196m│ ⛔ lib/_engine/engine/pointer_binding.dart 317:16                                    loggedHandler[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/private/ddc_runtime/operations.dart 367:37  _checkAndCall[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/private/ddc_runtime/operations.dart 372:39  dcall[0m
+[38;5;196m│ ⛔ [0m
+[38;5;196m└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;196m┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;196m│ #0   packages/my_todo/utils/net.dart 63:17                                    onError[0m
+[38;5;196m│ #1   packages/dio/src/dio_mixin.dart 429:22                                   handleError[0m
+[38;5;196m├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/core_patch.dart 942:28                get current[0m
+[38;5;196m│ ⛔ packages/dio/src/dio_mixin.dart 348:36                                            request[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 84:54                runBody[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 123:5                _async[0m
+[38;5;196m│ ⛔ packages/dio/src/dio_mixin.dart 331:33                                            request[0m
+[38;5;196m│ ⛔ packages/dio/src/dio_mixin.dart 99:12                                             post[0m
+[38;5;196m│ ⛔ packages/my_todo/utils/net.dart 29:17                                             post[0m
+[38;5;196m│ ⛔ packages/my_todo/api/user.dart 39:18                                              userSign[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 84:54                runBody[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 123:5                _async[0m
+[38;5;196m│ ⛔ packages/my_todo/api/user.dart 37:34                                              userSign[0m
+[38;5;196m│ ⛔ packages/my_todo/view/user/sign/sign_controller.dart 19:50                        login[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 84:54                runBody[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 123:5                _async[0m
+[38;5;196m│ ⛔ packages/my_todo/view/user/sign/sign_controller.dart 13:15                        login[0m
+[38;5;196m│ ⛔ packages/my_todo/view/user/sign/sign_page.dart 105:48                             <fn>[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 84:54                runBody[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 123:5                _async[0m
+[38;5;196m│ ⛔ packages/my_todo/view/user/sign/sign_page.dart 104:40                             <fn>[0m
+[38;5;196m│ ⛔ packages/flutter/src/material/ink_well.dart 1154:21                               handleTap[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/recognizer.dart 275:24                              invokeCallback[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/tap.dart 654:11                                     handleTapUp[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/tap.dart 311:5                                      [_checkUp][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/tap.dart 244:7                                      handlePrimaryPointer[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/recognizer.dart 630:9                               handleEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/pointer_router.dart 98:12                           [_dispatch][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/pointer_router.dart 143:9                           <fn>[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/private/linked_hash_map.dart 21:13          forEach[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/pointer_router.dart 141:17                          [_dispatchEventToRoutes][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/pointer_router.dart 127:7                           route[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 465:19                                 handleEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 445:14                                 dispatchEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/rendering/binding.dart 331:11                                dispatchEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 400:7                                  [_handlePointerEventImmediately][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 363:5                                  handlePointerEvent[0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 320:7                                  [_flushPointerEventQueue][0m
+[38;5;196m│ ⛔ packages/flutter/src/gestures/binding.dart 293:9                                  [_handlePointerDataPacket][0m
+[38;5;196m│ ⛔ lib/_engine/engine/platform_dispatcher.dart 1251:13                               invoke1[0m
+[38;5;196m│ ⛔ lib/_engine/engine/platform_dispatcher.dart 269:5                                 invokeOnPointerDataPacket[0m
+[38;5;196m│ ⛔ lib/_engine/engine/pointer_binding.dart 168:39                                    [_onPointerData][0m
+[38;5;196m│ ⛔ lib/_engine/engine/pointer_binding.dart 791:20                                    <fn>[0m
+[38;5;196m│ ⛔ lib/_engine/engine/pointer_binding.dart 720:14                                    <fn>[0m
+[38;5;196m│ ⛔ lib/_engine/engine/pointer_binding.dart 317:16                                    loggedHandler[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/private/ddc_runtime/operations.dart 367:37  _checkAndCall[0m
+[38;5;196m│ ⛔ dart-sdk/lib/_internal/js_dev_runtime/private/ddc_runtime/operations.dart 372:39  dcall[0m
+[38;5;196m│ ⛔ [0m
+[38;5;196m└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m

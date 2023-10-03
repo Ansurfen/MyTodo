@@ -1,0 +1,2097 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "MyTodo",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/chat/add": {
+            "post": {
+                "description": "add chat",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Add Chat",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "from",
+                        "name": "from",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "to",
+                        "name": "to",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "reply",
+                        "name": "reply",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "content",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "files",
+                        "name": "files",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/del": {
+            "post": {
+                "description": "delete chat",
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Del Chat",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/friend": {
+            "get": {
+                "description": "get friend",
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Get friend",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/get": {
+            "post": {
+                "description": "get chat",
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Get Chat",
+                "parameters": [
+                    {
+                        "description": "GetChatRequest",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.GetChatRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/event/qr": {
+            "get": {
+                "description": "qr event",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Event"
+                ],
+                "summary": "QR Event",
+                "responses": {
+                    "101": {
+                        "description": "Switching Protocols",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/internal/metrics": {
+            "get": {
+                "description": "Get Metrics",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "Get Metrics",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/internal/swagger/index.html": {
+            "get": {
+                "description": "Get API Document",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "Get API Document",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/action/add": {
+            "post": {
+                "description": "type: 1 (add friend), 2 (invite friend)",
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify action create",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "type",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "recv",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "param",
+                        "name": "param",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/action/commit": {
+            "post": {
+                "description": "status: 2 (confirm), 3 (refuse)",
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify action commit",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "status",
+                        "name": "status",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/action/del": {
+            "post": {
+                "description": "delete notify action",
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify action delete",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "type",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "recv",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/action/get": {
+            "get": {
+                "description": "get notify action",
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify action get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/add": {
+            "post": {
+                "description": "create notify",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify create",
+                "parameters": [
+                    {
+                        "description": "NotifyAddRequest",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.NotifyAddRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/all": {
+            "get": {
+                "description": "all notify",
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify all",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/del": {
+            "post": {
+                "description": "delete notify",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify delete",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/detail": {
+            "get": {
+                "description": "get notify detail",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify get detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/get": {
+            "get": {
+                "description": "get notify",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/pub/add": {
+            "post": {
+                "description": "create notify pub",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify pub create",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "nid",
+                        "name": "nid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "UID",
+                        "name": "uid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/pub/del": {
+            "post": {
+                "description": "delete notify pub",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify pub delete",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "nid",
+                        "name": "nid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/pub/get": {
+            "get": {
+                "description": "get notify pub",
+                "tags": [
+                    "Notify"
+                ],
+                "summary": "Notify pub get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/add": {
+            "post": {
+                "description": "create post",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Create Post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "content",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "files",
+                        "name": "images",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/add": {
+            "post": {
+                "description": "Create Comment Post",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Create Comment Post",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "reply",
+                        "name": "reply",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "pid",
+                        "name": "pid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "content",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "images",
+                        "name": "files",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/del": {
+            "post": {
+                "description": "Delete Comment Post",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Delete Comment Post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/edit": {
+            "post": {
+                "description": "Edit Comment Post",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Edit Comment Post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "content",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "images",
+                        "name": "files",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/favorite": {
+            "post": {
+                "description": "favorite comment",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Favorite comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "comment_id",
+                        "name": "comment_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/favoriteCount": {
+            "post": {
+                "description": "get count of the comment favorite",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get count of the comment favorite",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "comment_id",
+                        "name": "comment_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/get": {
+            "post": {
+                "description": "get Comment Post",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get Comment Post",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "pid",
+                        "name": "pid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/reply/add": {
+            "post": {
+                "description": "create comment reply",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Create Comment Reply",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "reply id (if not user to reply, it's 0 in default)",
+                        "name": "reply",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "content",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "images",
+                        "name": "files",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/reply/del": {
+            "post": {
+                "description": "edit comment reply",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Edit Comment Reply",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "comment_id",
+                        "name": "comment_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "reply_id",
+                        "name": "reply_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/reply/edit": {
+            "post": {
+                "description": "edit comment reply",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Edit Comment Reply",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "comment_id",
+                        "name": "comment_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "reply_id",
+                        "name": "reply_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "content",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "images",
+                        "name": "files",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/comment/unfavorite": {
+            "post": {
+                "description": "unfavorite comment",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Unfavorite comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "comment_id",
+                        "name": "comment_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/detail/{id}": {
+            "get": {
+                "description": "get post detail",
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get Post Detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "pid",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/favorite/add": {
+            "post": {
+                "description": "favorite post",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Favorite Post",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "post id",
+                        "name": "pid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/favorite/del": {
+            "post": {
+                "description": "unfavorite post",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Unfavorite Post",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "post id",
+                        "name": "pid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/favorite/get": {
+            "post": {
+                "description": "Get post favorite count",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Favorite Post count",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "post id",
+                        "name": "pid",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/get": {
+            "get": {
+                "description": "post get",
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Post",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "count",
+                        "name": "count",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/add": {
+            "post": {
+                "description": "create task",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Create Task",
+                "parameters": [
+                    {
+                        "description": "TaskCreateRequest",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.TaskCreateRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/commit": {
+            "post": {
+                "description": "Commit task",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Commit Task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "tid",
+                        "name": "tid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "type",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "param",
+                        "name": "param",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "files",
+                        "name": "files",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/get": {
+            "get": {
+                "description": "Get task",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get Task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/perm_check": {
+            "post": {
+                "description": "Has perm task",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Has perm Task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "tid",
+                        "name": "tid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/add": {
+            "post": {
+                "description": "create Topic",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Create Topic",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "description",
+                        "name": "desc",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/del": {
+            "post": {
+                "description": "delete Topic",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Delete Topic",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "task topic id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/exit": {
+            "post": {
+                "description": "exits Topic",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Exits Topic",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "task topic id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/get": {
+            "get": {
+                "description": "get Topic",
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Get Topic",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/grant": {
+            "post": {
+                "description": "grant Topic",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Grant perm Topic",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "task topic id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/history": {
+            "get": {
+                "description": "get history of Topic",
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Get history of Topic",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/member/rm": {
+            "post": {
+                "description": "Remove The member of Topic",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Remove The member of Topic",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "task topic id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "uid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/member/{id}": {
+            "get": {
+                "description": "get members of topic",
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Get members of topic",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "task topic id",
+                        "name": "tt_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/migrate": {
+            "post": {
+                "description": "migrate Topic",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Migrate perm Topic",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "task topic id",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "uid",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/sub": {
+            "post": {
+                "description": "Subscribes topic",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Subscribes topic",
+                "parameters": [
+                    {
+                        "description": "JoinTopicRequest",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.JoinTopicRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/ungrant": {
+            "post": {
+                "description": "ungrant Topic",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Topic"
+                ],
+                "summary": "Ungrant perm Topic",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "task topic id",
+                        "name": "tt_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/edit": {
+            "post": {
+                "description": "Edit user information",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Edit user information",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "profile",
+                        "name": "profile",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "telephone",
+                        "name": "telephone",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/get": {
+            "post": {
+                "description": "Get user detailed information",
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user detailed information",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/info/{id}": {
+            "get": {
+                "description": "get user information",
+                "tags": [
+                    "User"
+                ],
+                "summary": "User information",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/{id}": {
+            "get": {
+                "description": "get user profile",
+                "tags": [
+                    "User"
+                ],
+                "summary": "User profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/sign": {
+            "post": {
+                "description": "sign and login",
+                "tags": [
+                    "User"
+                ],
+                "summary": "User sign",
+                "parameters": [
+                    {
+                        "description": "UserSignRequest",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UserSignRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.GetChatRequest": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer",
+                    "default": 1
+                },
+                "pageSize": {
+                    "type": "integer",
+                    "default": 10
+                },
+                "to": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api.JoinTopicRequest": {
+            "type": "object",
+            "properties": {
+                "invite_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.NotifyAddRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "default": "This is a content"
+                },
+                "title": {
+                    "type": "string",
+                    "default": "This is a title"
+                }
+            }
+        },
+        "api.TaskCreateCond": {
+            "type": "object",
+            "properties": {
+                "param": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api.TaskCreateRequest": {
+            "type": "object",
+            "properties": {
+                "arrival": {
+                    "type": "string"
+                },
+                "conds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/api.TaskCreateCond"
+                    }
+                },
+                "cron": {
+                    "type": "integer"
+                },
+                "departure": {
+                    "type": "string"
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "topic": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api.UserSignRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "default": "a@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "default": "root"
+                }
+            }
+        }
+    }
+}

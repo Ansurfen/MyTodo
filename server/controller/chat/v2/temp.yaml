@@ -1,0 +1,345 @@
+app:
+    name: chatService
+    version: v1.0.0
+config:
+    - domain: '*'
+      name: my-config
+      path: default.yaml
+event:
+    - name: my-event
+      outputpaths:
+        - logs/event.log
+grpc:
+    - name: greeter
+      description: ""
+      port: 10000
+      enabled: true
+      enableReflection: true
+      noRecvMsgSizeLimit: false
+      commonService:
+        enabled: true
+        pathPrefix: ""
+      sw:
+        enabled: false
+        path: ""
+        jsonPath: api
+        headers: []
+      docs:
+        enabled: false
+        path: ""
+        specPath: ""
+        headers: []
+        style:
+            theme: ""
+        debug: false
+      prom:
+        enabled: true
+        path: ""
+        pusher:
+            enabled: false
+            IntervalMs: 0
+            jobName: ""
+            remoteAddress: ""
+            basicAuth: ""
+            certEntry: ""
+            loggerEntry: ""
+      static:
+        enabled: false
+        path: ""
+        sourceType: ""
+        sourcePath: ""
+      proxy:
+        enabled: false
+        rules: []
+      grpcWeb:
+        enabled: false
+        cors:
+            allowOrigins: []
+        websocket:
+            enabled: false
+            pingIntervalMs: 0
+            messageReadLimitBytes: 0
+            compressMode: ""
+      certEntry: ""
+      loggerEntry: ""
+      eventEntry: ""
+      pprof:
+        enabled: true
+        path: ""
+      enableRkGwOption: true
+      gwOption: null
+      middleware:
+        ignore: []
+        errorModel: ""
+        logging:
+            enabled: true
+            loggerEncoding: ""
+            loggerOutputPaths: []
+            eventEncoding: ""
+            eventOutputPaths: []
+            ignore: []
+        prom:
+            enabled: true
+            ignore: []
+        auth:
+            enabled: false
+            ignore: []
+            basic: []
+            apiKey: []
+        cors:
+            enabled: false
+            allowOrigins:
+                - http://localhost:*
+            allowCredentials: false
+            allowHeaders: []
+            allowMethods: []
+            exposeHeaders: []
+            maxAge: 0
+            ignore: []
+        secure:
+            enabled: true
+            ignore: []
+            xssProtection: ""
+            contentTypeNosniff: ""
+            xFrameOptions: ""
+            hstsMaxAge: 0
+            hstsExcludeSubdomains: false
+            hstsPreloadEnabled: false
+            contentSecurityPolicy: ""
+            cspReportOnly: false
+            referrerPolicy: ""
+        meta:
+            enabled: true
+            prefix: ""
+            ignore: []
+        jwt:
+            enabled: false
+            ignore: []
+            signerEntry: ""
+            symmetric:
+                algorithm: ""
+                token: ""
+                tokenPath: ""
+            asymmetric:
+                algorithm: ""
+                privateKey: ""
+                privateKeyPath: ""
+                publicKey: ""
+                publicKeyPath: ""
+            tokenLookup: ""
+            authScheme: ""
+            skipVerify: false
+        csrf:
+            enabled: false
+            ignore: []
+            tokenLength: 0
+            tokenLookup: ""
+            cookieName: ""
+            cookieDomain: ""
+            cookiePath: ""
+            cookieMaxAge: 0
+            cookieHttpOnly: false
+            cookieSameSite: ""
+        rateLimit:
+            enabled: false
+            ignore: []
+            algorithm: ""
+            reqPerSec: 1000000
+            paths: []
+        timeout:
+            enabled: false
+            timeoutMs: 0
+            ignore: []
+            paths: []
+        trace:
+            enabled: true
+            ignore: []
+            exporter:
+                file:
+                    enabled: false
+                    outputPath: ""
+                otlp:
+                    enabled: false
+                    endpoint: ""
+                zipkin:
+                    enabled: false
+                    endpoint: ""
+                jaeger:
+                    agent:
+                        enabled: true
+                        host: 192.168.127.130
+                        port: 0
+                    collector:
+                        enabled: false
+                        endpoint: ""
+                        username: ""
+                        password: ""
+    - name: greeter2
+      description: ""
+      port: 8081
+      enabled: true
+      enableReflection: true
+      noRecvMsgSizeLimit: false
+      commonService:
+        enabled: true
+        pathPrefix: ""
+      sw:
+        enabled: false
+        path: ""
+        jsonPath: api
+        headers: []
+      docs:
+        enabled: false
+        path: ""
+        specPath: ""
+        headers: []
+        style:
+            theme: ""
+        debug: false
+      prom:
+        enabled: true
+        path: ""
+        pusher:
+            enabled: false
+            IntervalMs: 0
+            jobName: ""
+            remoteAddress: ""
+            basicAuth: ""
+            certEntry: ""
+            loggerEntry: ""
+      static:
+        enabled: false
+        path: ""
+        sourceType: ""
+        sourcePath: ""
+      proxy:
+        enabled: false
+        rules: []
+      grpcWeb:
+        enabled: false
+        cors:
+            allowOrigins: []
+        websocket:
+            enabled: false
+            pingIntervalMs: 0
+            messageReadLimitBytes: 0
+            compressMode: ""
+      certEntry: ""
+      loggerEntry: ""
+      eventEntry: ""
+      pprof:
+        enabled: true
+        path: ""
+      enableRkGwOption: true
+      gwOption: null
+      middleware:
+        ignore: []
+        errorModel: ""
+        logging:
+            enabled: true
+            loggerEncoding: ""
+            loggerOutputPaths: []
+            eventEncoding: ""
+            eventOutputPaths: []
+            ignore: []
+        prom:
+            enabled: true
+            ignore: []
+        auth:
+            enabled: false
+            ignore: []
+            basic: []
+            apiKey: []
+        cors:
+            enabled: false
+            allowOrigins:
+                - http://localhost:*
+            allowCredentials: false
+            allowHeaders: []
+            allowMethods: []
+            exposeHeaders: []
+            maxAge: 0
+            ignore: []
+        secure:
+            enabled: true
+            ignore: []
+            xssProtection: ""
+            contentTypeNosniff: ""
+            xFrameOptions: ""
+            hstsMaxAge: 0
+            hstsExcludeSubdomains: false
+            hstsPreloadEnabled: false
+            contentSecurityPolicy: ""
+            cspReportOnly: false
+            referrerPolicy: ""
+        meta:
+            enabled: true
+            prefix: ""
+            ignore: []
+        jwt:
+            enabled: false
+            ignore: []
+            signerEntry: ""
+            symmetric:
+                algorithm: ""
+                token: ""
+                tokenPath: ""
+            asymmetric:
+                algorithm: ""
+                privateKey: ""
+                privateKeyPath: ""
+                publicKey: ""
+                publicKeyPath: ""
+            tokenLookup: ""
+            authScheme: ""
+            skipVerify: false
+        csrf:
+            enabled: false
+            ignore: []
+            tokenLength: 0
+            tokenLookup: ""
+            cookieName: ""
+            cookieDomain: ""
+            cookiePath: ""
+            cookieMaxAge: 0
+            cookieHttpOnly: false
+            cookieSameSite: ""
+        rateLimit:
+            enabled: false
+            ignore: []
+            algorithm: ""
+            reqPerSec: 1000000
+            paths: []
+        timeout:
+            enabled: false
+            timeoutMs: 0
+            ignore: []
+            paths: []
+        trace:
+            enabled: true
+            ignore: []
+            exporter:
+                file:
+                    enabled: false
+                    outputPath: ""
+                otlp:
+                    enabled: false
+                    endpoint: ""
+                zipkin:
+                    enabled: false
+                    endpoint: ""
+                jaeger:
+                    agent:
+                        enabled: true
+                        host: 192.168.127.130
+                        port: 0
+                    collector:
+                        enabled: false
+                        endpoint: ""
+                        username: ""
+                        password: ""
+logger:
+    - name: my-logger
+      zap:
+        outputpaths:
+            - logs/log.log

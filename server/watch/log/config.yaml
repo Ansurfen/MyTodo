@@ -1,0 +1,6 @@
+path:
+  - .
+pattern: .*\.log
+period: "*/1 * * * *"
+sync:
+index: ../log.index.json

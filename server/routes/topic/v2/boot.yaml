@@ -1,0 +1,77 @@
+---
+app:
+  name: topic # Optional, default: "rk"
+  version: "v1.0.0" # Optional, default: "local"
+  description: "this is description" # Optional, default: ""
+  keywords: ["topic"]
+  homeUrl: "http://example.com" # Optional, default: ""
+  docsUrl: ["http://example.com"] # Optional, default: []
+  maintainers: ["rk-dev"] # Optional, default: []
+cert:
+  - name: my-cert
+    certPemPath: "../../../middleware/tls/server.pem"
+    keyPemPath: "../../../middleware/tls/server-key.pem"
+grpc:
+  - name: greeter
+    port: 8080
+    enabled: true
+    enableReflection: true
+    enableRkGwOption: true
+    commonService:
+      enabled: true
+    prom:
+      enabled: true # Optional, default: false
+    pprof:
+      enabled: true
+    # certEntry: "my-cert"
+    sw:
+      enabled: false
+      # jsonPath: docs
+    #      path: "sw"
+    #      headers: []
+    middleware:
+      logging:
+        enabled: true # Optional, default: false
+        loggerEncoding: "json"
+        loggerOutputPaths: ["logs/app.log"]
+      prom:
+        enabled: true # Optional, default: false
+      meta:
+        enabled: true # Optional, default: false
+      cors:
+        allowOrigins:
+          - "http://localhost:*"
+      secure:
+        enabled: true # Optional, default: false
+      trace:
+        enabled: true
+        exporter:
+          jaeger:
+            agent:
+              enabled: true
+              host: 192.168.127.130
+      errorModel: amazon
+      jwt:
+        enabled: false
+        symmetric:
+          algorithm: HS256
+          token: "my-secret"
+          tokenPath: ""
+        signerEntry: ""
+        ignore: []
+        skipVerify: false
+        asymmetric:
+          algorithm: RS256
+          privateKey:
+          privateKeyPath: ./pri.pem
+          publicKey:
+          publicKeyPath: ./pub.pem
+        tokenLookup: "header:x-token"
+        authScheme: "Bearer"
+      rateLimit:
+        enabled: true
+        paths:
+          - path: "/v2/topic/add"
+            reqPerSec: 0
+          - path: "/v2/topic/del"
+            reqPerSec: 0

@@ -1,0 +1,134 @@
+---
+app:
+  name: chatService
+  version: "v1.0.0" # Optional, default: "local"
+  # description: "this is description"                      # Optional, default: ""
+  # keywords: ["rk", "golang"]                              # Optional, default: []
+  # homeUrl: "http://example.com"                           # Optional, default: ""
+  # docsUrl: ["http://example.com"]                         # Optional, default: []
+  # maintainers: ["rk-dev"]                                 # Optional, default: []
+logger:
+  - name: my-logger                                       # Required
+    description: "Description of entry"                   # Optional
+    domain: "*"                                           # Optional, default: "*"
+    zap:                                                  # Optional
+      level: info                                         # Optional, default: info
+      development: true                                   # Optional, default: true
+      disableCaller: false                                # Optional, default: false
+      disableStacktrace: true                             # Optional, default: true
+      encoding: console                                   # Optional, default: console
+      outputPaths: ["stdout"]                             # Optional, default: [stdout]
+      errorOutputPaths: ["stderr"]                        # Optional, default: [stderr]
+      encoderConfig:                                      # Optional
+        timeKey: "ts"                                     # Optional, default: ts
+        levelKey: "level"                                 # Optional, default: level
+        nameKey: "logger"                                 # Optional, default: logger
+        callerKey: "caller"                               # Optional, default: caller
+        messageKey: "msg"                                 # Optional, default: msg
+        stacktraceKey: "stacktrace"                       # Optional, default: stacktrace
+        skipLineEnding: false                             # Optional, default: false
+        lineEnding: "\n"                                  # Optional, default: \n
+        consoleSeparator: "\t"                            # Optional, default: \t
+      sampling:                                           # Optional, default: nil
+        initial: 0                                        # Optional, default: 0
+        thereafter: 0                                     # Optional, default: 0
+      initialFields:                                      # Optional, default: empty map
+        key: value
+    lumberjack:                                           # Optional, default: nil
+      filename: "logs/app.log"
+      maxsize: 1024                                       # Optional, suggested: 1024 (MB)
+      maxage: 7                                           # Optional, suggested: 7 (day)
+      maxbackups: 3                                       # Optional, suggested: 3 (day)
+      localtime: true                                     # Optional, suggested: true
+      compress: true                                      # Optional, suggested: true
+    loki:
+      enabled: true                                       # Optional, default: false
+      addr: 192.168.127.130:3100                                # Optional, default: localhost:3100
+      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+      username: ""                                        # Optional, default: ""
+      password: ""                                        # Optional, default: ""
+      maxBatchWaitMs: 3000                                # Optional, default: 3000
+      maxBatchSize: 1000                                  # Optional, default: 1000
+      insecureSkipVerify: false                           # Optional, default: false
+      labels:                                             # Optional, default: empty map
+        my_label_key: my_label_value
+event:
+  - name: my-event
+    outputPaths: ["logs/event.log"]
+config:
+  - name: my-config
+    domain: "*"
+    path: "default.yaml"
+grpc:
+  - name: greeter1 # Required
+    port: 10000 # Required
+    enabled: true # Required
+    enableReflection: true # Optional, default: false
+    enableRkGwOption: true # Optional, default: false
+    commonService:
+      enabled: true # Optional, default: false
+    docs:
+      enabled: false # Optional, default: false
+    sw:
+      enabled: false # Optional, default: false
+      jsonPath: "api"
+    prom:
+      enabled: true # Optional, default: false
+    pprof:
+      enabled: true
+    middleware:
+      #errorModel: amazon
+      logging:
+        enabled: true # Optional, default: false
+      prom:
+        enabled: true # Optional, default: false
+      meta:
+        enabled: true # Optional, default: false
+      cors:
+        allowOrigins:
+          - "http://localhost:*"
+      secure:
+        enabled: true # Optional, default: false
+      trace:
+        enabled: true
+        exporter:
+          jaeger:
+            agent:
+              enabled: true
+              host: 192.168.127.130
+  - name: greeter2
+    port: 8081
+    enabled: true
+    enableReflection: true # Optional, default: false
+    enableRkGwOption: true # Optional, default: false
+    commonService:
+      enabled: true # Optional, default: false
+    docs:
+      enabled: false # Optional, default: false
+    sw:
+      enabled: false # Optional, default: false
+      jsonPath: "api"
+    prom:
+      enabled: true # Optional, default: false
+    pprof:
+      enabled: true
+    middleware:
+      #errorModel: amazon
+      logging:
+        enabled: true # Optional, default: false
+      prom:
+        enabled: true # Optional, default: false
+      meta:
+        enabled: true # Optional, default: false
+      cors:
+        allowOrigins:
+          - "http://localhost:*"
+      secure:
+        enabled: true # Optional, default: false
+      trace:
+        enabled: true
+        exporter:
+          jaeger:
+            agent:
+              enabled: true
+              host: 192.168.127.130

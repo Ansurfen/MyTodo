@@ -1,0 +1,57 @@
+sql:
+  charset: utf8
+  database: todo
+  host: 192.168.127.130
+  port: 3306
+  username: root
+  password: 123456
+mongo:
+  host: 192.168.127.130
+  port: 27017
+  username: root
+  password: 123456
+  database: todo
+redis:
+  host: 192.168.127.130
+  port: 6379
+mq:
+  host: 192.168.127.130
+  port: 5672
+  username: root
+  password: 123456
+minio:
+  host: 192.168.127.130
+  port: 9000
+  id: root
+  secret: root123456
+  secure: false
+es:
+  addresses:
+    - http://192.168.127.130:9200
+log:
+  level: info
+  filename: todo.log
+  stdout: true
+  path: ./log
+  fileMaxSize:
+  fileMaxBackups:
+  maxAge:
+  compress:
+  format: json
+email:
+captcha:
+etcd:
+  dialTimeout: 5
+  endpoints:
+    - 192.168.127.130:2379
+starter:
+  mode: release
+  sw:
+    enabled: true
+    basePath: /
+    version: 1.0.0
+  profile: ii1 # govatar | ii1 | ii2
+server:
+  name:
+  host: 192.168.47.1
+  port: 9090

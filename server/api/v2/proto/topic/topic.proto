@@ -1,0 +1,24 @@
+syntax = "proto3";
+option go_package="./;topic";
+
+package topic;
+
+service TopicService {
+    rpc CreateTopic (CreateTopicRequest) returns (CreateTopicResponse);
+    rpc DeleteTopic (DeleteTopicRequest) returns (DeleteTopicResponse);
+}
+
+message CreateTopicRequest {
+    string Name = 1;
+    string Desc = 2;
+}
+
+message CreateTopicResponse {
+    string InviteCode = 1;
+}
+
+message DeleteTopicRequest {
+    uint32 Id = 1;
+}
+
+message DeleteTopicResponse {}

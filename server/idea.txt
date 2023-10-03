@@ -1,0 +1,51 @@
+k8s-node1@k8snode1-virtual-machine: hulo install plugin csio-emulation
+waiting for ...
+...
+...
+completed finished
+k8s-node1@k8snode1-virtual-machine: csio-emulation import xx.db
+k8s-node1@k8snode1-virtual-machine: csio-emulation ls
+switch1 switch2 computer1
+k8s-node1@k8snode1-virtual-machine: csio-emulation enable switch1
+k8s-node1@k8snode1-virtual-machine(switch1): vlan 10
+k8s-node1@k8snode1-virtual-machine(switch1): show vlan
+k8s-node1@k8snode1-virtual-machine(switch1): exit
+k8s-node1@k8snode1-virtual-machine (GIT Branch):
+
+-> k8s-node1@k8snode1-virtual-machine(switch1): show vlan
+执行当前操作???
+
+别名系统，命令提示系统，gpt系统，
+
+
+csio touch switch0921 swtich1
+
+(switch1)>
+
+csico packet tracer emulator
+
+/switch/create/
+
+/swtich1
+
+hulo ls /etc/fs
+> switch1 switch2
+
+hulo cat swtich1
+
+hulo touch switch1
+
+hulo vim switch1
+
+> hulo csico link switch1 int fa0/1 switch2 int fa0/2
+
+csico link switch1 int fa0/1 switch2 int fa0/2
+csico link switch1 int fa0/4 switch2 int fa0/5
+csico link switch1 int fa0/3 switch2 int fa0/1
+
+tui join to solve and improve the process to fast handle
+
+link switch1 int fa0/1
+>...
+>...
+>...

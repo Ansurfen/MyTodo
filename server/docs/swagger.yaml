@@ -1,0 +1,1397 @@
+basePath: /
+definitions:
+  api.GetChatRequest:
+    properties:
+      from:
+        type: integer
+      page:
+        default: 1
+        type: integer
+      pageSize:
+        default: 10
+        type: integer
+      to:
+        type: integer
+    type: object
+  api.JoinTopicRequest:
+    properties:
+      invite_code:
+        type: string
+    type: object
+  api.NotifyAddRequest:
+    properties:
+      content:
+        default: This is a content
+        type: string
+      title:
+        default: This is a title
+        type: string
+    type: object
+  api.TaskCreateCond:
+    properties:
+      param:
+        type: string
+      type:
+        type: integer
+    type: object
+  api.TaskCreateRequest:
+    properties:
+      arrival:
+        type: string
+      conds:
+        items:
+          $ref: '#/definitions/api.TaskCreateCond'
+        type: array
+      cron:
+        type: integer
+      departure:
+        type: string
+      desc:
+        type: string
+      name:
+        type: string
+      topic:
+        type: integer
+    type: object
+  api.UserSignRequest:
+    properties:
+      email:
+        default: a@gmail.com
+        type: string
+      password:
+        default: root
+        type: string
+    type: object
+info:
+  contact: {}
+  title: MyTodo
+  version: "1.0"
+paths:
+  /chat/add:
+    post:
+      consumes:
+      - multipart/form-data
+      description: add chat
+      parameters:
+      - description: from
+        in: formData
+        name: from
+        required: true
+        type: integer
+      - description: to
+        in: formData
+        name: to
+        required: true
+        type: integer
+      - description: reply
+        in: formData
+        name: reply
+        type: string
+      - description: content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: files
+        in: formData
+        name: files
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Add Chat
+      tags:
+      - Chat
+  /chat/del:
+    post:
+      description: delete chat
+      parameters:
+      - description: ID
+        in: formData
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Del Chat
+      tags:
+      - Chat
+  /chat/friend:
+    get:
+      description: get friend
+      parameters:
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get friend
+      tags:
+      - Chat
+  /chat/get:
+    post:
+      description: get chat
+      parameters:
+      - description: GetChatRequest
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.GetChatRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get Chat
+      tags:
+      - Chat
+  /event/qr:
+    get:
+      consumes:
+      - application/json
+      description: qr event
+      produces:
+      - application/json
+      responses:
+        "101":
+          description: Switching Protocols
+          schema:
+            type: string
+      summary: QR Event
+      tags:
+      - Event
+  /internal/metrics:
+    get:
+      consumes:
+      - application/json
+      description: Get Metrics
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get Metrics
+      tags:
+      - System
+  /internal/swagger/index.html:
+    get:
+      consumes:
+      - application/json
+      description: Get API Document
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get API Document
+      tags:
+      - System
+  /notify/action/add:
+    post:
+      description: 'type: 1 (add friend), 2 (invite friend)'
+      parameters:
+      - description: type
+        in: formData
+        name: type
+        required: true
+        type: integer
+      - description: recv
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: param
+        in: formData
+        name: param
+        type: string
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify action create
+      tags:
+      - Notify
+  /notify/action/commit:
+    post:
+      description: 'status: 2 (confirm), 3 (refuse)'
+      parameters:
+      - description: status
+        in: formData
+        name: status
+        required: true
+        type: integer
+      - description: id
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify action commit
+      tags:
+      - Notify
+  /notify/action/del:
+    post:
+      description: delete notify action
+      parameters:
+      - description: type
+        in: formData
+        name: type
+        required: true
+        type: integer
+      - description: recv
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify action delete
+      tags:
+      - Notify
+  /notify/action/get:
+    get:
+      description: get notify action
+      parameters:
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify action get
+      tags:
+      - Notify
+  /notify/add:
+    post:
+      consumes:
+      - application/json
+      description: create notify
+      parameters:
+      - description: NotifyAddRequest
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.NotifyAddRequest'
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify create
+      tags:
+      - Notify
+  /notify/all:
+    get:
+      description: all notify
+      parameters:
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify all
+      tags:
+      - Notify
+  /notify/del:
+    post:
+      consumes:
+      - multipart/form-data
+      description: delete notify
+      parameters:
+      - description: ID
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify delete
+      tags:
+      - Notify
+  /notify/detail:
+    get:
+      consumes:
+      - multipart/form-data
+      description: get notify detail
+      parameters:
+      - description: id
+        in: formData
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify get detail
+      tags:
+      - Notify
+  /notify/get:
+    get:
+      consumes:
+      - multipart/form-data
+      description: get notify
+      parameters:
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify get
+      tags:
+      - Notify
+  /notify/pub/add:
+    post:
+      consumes:
+      - multipart/form-data
+      description: create notify pub
+      parameters:
+      - description: nid
+        in: formData
+        name: nid
+        required: true
+        type: integer
+      - description: UID
+        in: formData
+        name: uid
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify pub create
+      tags:
+      - Notify
+  /notify/pub/del:
+    post:
+      consumes:
+      - multipart/form-data
+      description: delete notify pub
+      parameters:
+      - description: nid
+        in: formData
+        name: nid
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify pub delete
+      tags:
+      - Notify
+  /notify/pub/get:
+    get:
+      description: get notify pub
+      parameters:
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Notify pub get
+      tags:
+      - Notify
+  /post/add:
+    post:
+      consumes:
+      - multipart/form-data
+      description: create post
+      parameters:
+      - description: content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: files
+        in: formData
+        name: images
+        type: file
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Create Post
+      tags:
+      - Post
+  /post/comment/add:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create Comment Post
+      parameters:
+      - description: reply
+        in: formData
+        name: reply
+        required: true
+        type: integer
+      - description: pid
+        in: formData
+        name: pid
+        required: true
+        type: integer
+      - description: content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: images
+        in: formData
+        name: files
+        type: file
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Create Comment Post
+      tags:
+      - Post
+  /post/comment/del:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Delete Comment Post
+      parameters:
+      - description: id
+        in: formData
+        name: id
+        required: true
+        type: string
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Delete Comment Post
+      tags:
+      - Post
+  /post/comment/edit:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Edit Comment Post
+      parameters:
+      - description: id
+        in: formData
+        name: id
+        required: true
+        type: string
+      - description: content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: images
+        in: formData
+        name: files
+        type: file
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Edit Comment Post
+      tags:
+      - Post
+  /post/comment/favorite:
+    post:
+      consumes:
+      - multipart/form-data
+      description: favorite comment
+      parameters:
+      - description: comment_id
+        in: formData
+        name: comment_id
+        required: true
+        type: string
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Favorite comment
+      tags:
+      - Post
+  /post/comment/favoriteCount:
+    post:
+      consumes:
+      - multipart/form-data
+      description: get count of the comment favorite
+      parameters:
+      - description: comment_id
+        in: formData
+        name: comment_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get count of the comment favorite
+      tags:
+      - Post
+  /post/comment/get:
+    post:
+      consumes:
+      - multipart/form-data
+      description: get Comment Post
+      parameters:
+      - description: pid
+        in: formData
+        name: pid
+        required: true
+        type: integer
+      - description: page
+        in: formData
+        name: page
+        required: true
+        type: integer
+      - description: pageSize
+        in: formData
+        name: pageSize
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get Comment Post
+      tags:
+      - Post
+  /post/comment/reply/add:
+    post:
+      consumes:
+      - multipart/form-data
+      description: create comment reply
+      parameters:
+      - description: id
+        in: formData
+        name: id
+        required: true
+        type: string
+      - description: reply id (if not user to reply, it's 0 in default)
+        in: formData
+        name: reply
+        required: true
+        type: integer
+      - description: content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: images
+        in: formData
+        name: files
+        type: file
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Create Comment Reply
+      tags:
+      - Post
+  /post/comment/reply/del:
+    post:
+      consumes:
+      - multipart/form-data
+      description: edit comment reply
+      parameters:
+      - description: comment_id
+        in: formData
+        name: comment_id
+        required: true
+        type: string
+      - description: reply_id
+        in: formData
+        name: reply_id
+        required: true
+        type: string
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Edit Comment Reply
+      tags:
+      - Post
+  /post/comment/reply/edit:
+    post:
+      consumes:
+      - multipart/form-data
+      description: edit comment reply
+      parameters:
+      - description: comment_id
+        in: formData
+        name: comment_id
+        required: true
+        type: string
+      - description: reply_id
+        in: formData
+        name: reply_id
+        required: true
+        type: string
+      - description: content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: images
+        in: formData
+        name: files
+        type: file
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Edit Comment Reply
+      tags:
+      - Post
+  /post/comment/unfavorite:
+    post:
+      consumes:
+      - multipart/form-data
+      description: unfavorite comment
+      parameters:
+      - description: comment_id
+        in: formData
+        name: comment_id
+        required: true
+        type: string
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Unfavorite comment
+      tags:
+      - Post
+  /post/detail/{id}:
+    get:
+      description: get post detail
+      parameters:
+      - description: pid
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get Post Detail
+      tags:
+      - Post
+  /post/favorite/add:
+    post:
+      consumes:
+      - multipart/form-data
+      description: favorite post
+      parameters:
+      - description: post id
+        in: formData
+        name: pid
+        required: true
+        type: integer
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Favorite Post
+      tags:
+      - Post
+  /post/favorite/del:
+    post:
+      consumes:
+      - multipart/form-data
+      description: unfavorite post
+      parameters:
+      - description: post id
+        in: formData
+        name: pid
+        required: true
+        type: integer
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Unfavorite Post
+      tags:
+      - Post
+  /post/favorite/get:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Get post favorite count
+      parameters:
+      - description: post id
+        in: formData
+        name: pid
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Favorite Post count
+      tags:
+      - Post
+  /post/get:
+    get:
+      description: post get
+      parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: count
+        in: query
+        name: count
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Post
+      tags:
+      - Post
+  /task/add:
+    post:
+      consumes:
+      - application/json
+      description: create task
+      parameters:
+      - description: TaskCreateRequest
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.TaskCreateRequest'
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Create Task
+      tags:
+      - Task
+  /task/commit:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Commit task
+      parameters:
+      - description: tid
+        in: formData
+        name: tid
+        required: true
+        type: integer
+      - description: type
+        in: formData
+        name: type
+        required: true
+        type: integer
+      - description: param
+        in: formData
+        name: param
+        required: true
+        type: string
+      - description: files
+        in: formData
+        name: files
+        required: true
+        type: file
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Commit Task
+      tags:
+      - Task
+  /task/get:
+    get:
+      description: Get task
+      parameters:
+      - description: page
+        in: formData
+        name: page
+        required: true
+        type: integer
+      - description: limit
+        in: formData
+        name: limit
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get Task
+      tags:
+      - Task
+  /task/perm_check:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Has perm task
+      parameters:
+      - description: tid
+        in: formData
+        name: tid
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Has perm Task
+      tags:
+      - Task
+  /topic/add:
+    post:
+      consumes:
+      - multipart/form-data
+      description: create Topic
+      parameters:
+      - description: Name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: description
+        in: formData
+        name: desc
+        required: true
+        type: string
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Create Topic
+      tags:
+      - Topic
+  /topic/del:
+    post:
+      consumes:
+      - multipart/form-data
+      description: delete Topic
+      parameters:
+      - description: task topic id
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Delete Topic
+      tags:
+      - Topic
+  /topic/exit:
+    post:
+      consumes:
+      - multipart/form-data
+      description: exits Topic
+      parameters:
+      - description: task topic id
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Exits Topic
+      tags:
+      - Topic
+  /topic/get:
+    get:
+      description: get Topic
+      parameters:
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get Topic
+      tags:
+      - Topic
+  /topic/grant:
+    post:
+      consumes:
+      - multipart/form-data
+      description: grant Topic
+      parameters:
+      - description: task topic id
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Grant perm Topic
+      tags:
+      - Topic
+  /topic/history:
+    get:
+      description: get history of Topic
+      parameters:
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get history of Topic
+      tags:
+      - Topic
+  /topic/member/{id}:
+    get:
+      description: get members of topic
+      parameters:
+      - description: task topic id
+        in: path
+        name: tt_id
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get members of topic
+      tags:
+      - Topic
+  /topic/member/rm:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Remove The member of Topic
+      parameters:
+      - description: task topic id
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: user id
+        in: formData
+        name: uid
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Remove The member of Topic
+      tags:
+      - Topic
+  /topic/migrate:
+    post:
+      consumes:
+      - multipart/form-data
+      description: migrate Topic
+      parameters:
+      - description: task topic id
+        in: formData
+        name: id
+        required: true
+        type: integer
+      - description: user id
+        in: formData
+        name: uid
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Migrate perm Topic
+      tags:
+      - Topic
+  /topic/sub:
+    post:
+      consumes:
+      - application/json
+      description: Subscribes topic
+      parameters:
+      - description: JoinTopicRequest
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.JoinTopicRequest'
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Subscribes topic
+      tags:
+      - Topic
+  /topic/ungrant:
+    post:
+      consumes:
+      - multipart/form-data
+      description: ungrant Topic
+      parameters:
+      - description: task topic id
+        in: formData
+        name: tt_id
+        required: true
+        type: integer
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Ungrant perm Topic
+      tags:
+      - Topic
+  /user/edit:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Edit user information
+      parameters:
+      - description: profile
+        in: formData
+        name: profile
+        required: true
+        type: file
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: telephone
+        in: formData
+        name: telephone
+        required: true
+        type: string
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Edit user information
+      tags:
+      - User
+  /user/get:
+    post:
+      description: Get user detailed information
+      parameters:
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get user detailed information
+      tags:
+      - User
+  /user/info/{id}:
+    get:
+      description: get user information
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: User information
+      tags:
+      - User
+  /user/profile/{id}:
+    get:
+      description: get user profile
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: User profile
+      tags:
+      - User
+  /user/sign:
+    post:
+      description: sign and login
+      parameters:
+      - description: UserSignRequest
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.UserSignRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: User sign
+      tags:
+      - User
+swagger: "2.0"

@@ -1,0 +1,145 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "topic.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "TopicService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/topic/add": {
+      "post": {
+        "operationId": "TopicService_CreateTopic",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/topicCreateTopicResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/topicCreateTopicRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TopicService"
+        ]
+      }
+    },
+    "/v2/topic/del": {
+      "post": {
+        "operationId": "TopicService_DeleteTopic",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/topicDeleteTopicResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/topicDeleteTopicRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TopicService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "topicCreateTopicRequest": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Desc": {
+          "type": "string"
+        }
+      }
+    },
+    "topicCreateTopicResponse": {
+      "type": "object",
+      "properties": {
+        "InviteCode": {
+          "type": "string"
+        }
+      }
+    },
+    "topicDeleteTopicRequest": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "topicDeleteTopicResponse": {
+      "type": "object"
+    }
+  }
+}
