@@ -1,0 +1,14 @@
+builders:
+#  web_sandbox_generator:
+#    import: "package:my_todo/utils/web_sanbox/builder.dart"
+#    builder_factories: ["dartBindingBuilder"]
+#    build_extensions: {".dart": [".g.part"]}
+#    auto_apply: root_package
+#    build_to: source
+
+#  formData_generator:
+#    import: "package:my_todo/utils/formdata_builder.dart"
+#    builder_factories: ["formDataBuilder"]
+#    build_extensions: {".dart": [".f.part"]}
+#    auto_apply: root_package
+#    build_to: source
