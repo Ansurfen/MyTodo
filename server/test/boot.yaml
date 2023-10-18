@@ -1,0 +1,6 @@
+---
+grpc:
+  - name: greeter
+    port: 8080
+    enabled: true
+    enableRkGwOption: true

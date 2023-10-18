@@ -914,6 +914,13 @@ const docTemplate = `{
                         "name": "pageSize",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1264,6 +1271,13 @@ const docTemplate = `{
                         "description": "count",
                         "name": "count",
                         "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -2091,6 +2105,10 @@ const docTemplate = `{
         },
         "api.UserSignRequest": {
             "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
             "properties": {
                 "email": {
                     "type": "string",

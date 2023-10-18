@@ -61,6 +61,9 @@ definitions:
       password:
         default: root
         type: string
+    required:
+    - email
+    - password
     type: object
 info:
   contact: {}
@@ -664,6 +667,11 @@ paths:
         name: pageSize
         required: true
         type: integer
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -899,6 +907,11 @@ paths:
         name: count
         required: true
         type: integer
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
       responses:
         "200":
           description: OK

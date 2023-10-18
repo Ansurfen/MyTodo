@@ -18,6 +18,11 @@ import (
 	"time"
 )
 
+const (
+	ChatTypeTagText = "0001"
+	ChatTypeTagFile = "0002"
+)
+
 // @Summary Add Chat
 // @Description add chat
 // @Tags Chat
@@ -37,12 +42,12 @@ func AddChat(
 	contents := []string{}
 	for _, file := range req.Files {
 		filename := fmt.Sprintf("chat:/user/%s%s", utils.RandString(16), filepath.Ext(file.Filename))
-		contents = append(contents, "0002"+filename)
+		contents = append(contents, ChatTypeTagFile+filename)
 		if err := ctx.SaveUploadFile(file, filename); err != nil {
 			return ctx.ThrowWithResult(err)
 		}
 	}
-	contents = append(contents, "0001"+req.Content)
+	contents = append(contents, ChatTypeTagText+req.Content)
 	chatController.Get(ctx).ChatDao.Create(&po.Chat{
 		CreatedAt: time.Now(),
 		From:      req.From,
@@ -89,7 +94,7 @@ func GetChat(
 					if err != nil {
 						return ctx.ThrowWithResult(err)
 					}
-					page.Data[i].Content[j] = "0002" + url.String()
+					page.Data[i].Content[j] = ChatTypeTagFile + url.String()
 				}
 			}
 		}

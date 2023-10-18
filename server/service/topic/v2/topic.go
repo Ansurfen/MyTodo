@@ -2,15 +2,12 @@ package service
 
 import (
 	pb "MyTodo/api/v2/topic"
+	userController "MyTodo/controller/user/v2"
 	"context"
 	"fmt"
-	"github.com/rookie-ninja/rk-grpc/v2/middleware/context"
+
 	"google.golang.org/grpc"
 )
-
-type TopicService struct {
-	pb.UnimplementedTopicServiceServer
-}
 
 var Handlers = pb.RegisterTopicServiceHandlerFromEndpoint
 
@@ -18,12 +15,26 @@ func Loader(server *grpc.Server) {
 	pb.RegisterTopicServiceServer(server, &TopicService{})
 }
 
-func (server *TopicService) CreateTopic(ctx context.Context, _ *pb.CreateTopicRequest) (*pb.CreateTopicResponse, error) {
-	fmt.Println(rkgrpcctx.GetJwtToken(ctx))
-	rkgrpcctx.GetLogger(ctx).Info("6666")
+type TopicService struct {
+	pb.UnimplementedTopicServiceServer
+}
+
+func (server *TopicService) CreateTopic(
+	ctx context.Context,
+	req *pb.CreateTopicRequest) (
+	*pb.CreateTopicResponse, error) {
+	uc, err := userController.Get(ctx)
+	if err != nil {
+		return &pb.CreateTopicResponse{}, err
+	}
+	fmt.Println(uc.User)
+	// rkgrpcctx.GetLogger(ctx).Info("6666")
 	return &pb.CreateTopicResponse{}, nil
 }
 
-func (server *TopicService) DeleteTopic(context.Context, *pb.DeleteTopicRequest) (*pb.DeleteTopicResponse, error) {
+func (server *TopicService) DeleteTopic(
+	ctx context.Context,
+	req *pb.DeleteTopicRequest) (
+	*pb.DeleteTopicResponse, error) {
 	return &pb.DeleteTopicResponse{}, nil
 }

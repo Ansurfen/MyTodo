@@ -48,7 +48,7 @@ func Get(ctx starter.TodoContext) (*UserController, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	
 	ctx.Put(interfaces.ControllerTypeUser, uc)
 	return uc, nil
 }
@@ -76,9 +76,15 @@ WHERE
     uid = %d OR follower = %d;`
 
 func (c *UserController) Friends() (res []int) {
-	if c.User.ID > 0 {
-		db.SQL().RawExec(SQLGetFriend, c.User.ID, c.User.ID, c.User.ID).Scan(&res)
+	// if c.User.ID > 0 {
+	// 	db.SQL().RawExec(SQLGetFriend, c.User.ID, c.User.ID, c.User.ID).Scan(&res)
+	// }
+	if c.User.ID <= 0 {
+		return
 	}
+	_ = db.SQL().Select("CASE WHEN uid = ? THEN follower ELSE uid END AS friend", c.User.ID).
+		Where("uid = ? OR follower = ?", c.User.ID, c.User.ID).
+		Find(&res).Error
 	return res
 }
 

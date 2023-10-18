@@ -2,10 +2,8 @@ package main
 
 import (
 	"MyTodo/conf"
-	dao "MyTodo/dao/v2"
 	"MyTodo/engine/v2/starter"
-	"MyTodo/middleware/driver/sql/v1"
-	service "MyTodo/service/topic/v2"
+	service "MyTodo/service/chat/v2"
 	_ "embed"
 )
 
@@ -29,10 +27,8 @@ func main() {
 		panic(err)
 	}
 
-	db := sql.New(opt.SQL)
-	dao.SetDefault(db.DB)
-
-	srv.Bootstrap()
+	// db := sql.New(opt.SQL)
+	// dao.SetDefault(db.DB)
 
 	for name, info := range srv.GrpcOption.Service() {
 		if info.Enabled {
@@ -52,6 +48,8 @@ func main() {
 			// }
 		}
 	}
+	
+	srv.Bootstrap()
 
 	srv.WaitForShutdownSig()
 }

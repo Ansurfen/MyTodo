@@ -1,8 +1,8 @@
 package starter
 
 import (
-	"MyTodo/utils"
 	interfaces "MyTodo/interface"
+	"MyTodo/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,6 +18,7 @@ func BindRequest[T any](fn TodoServerHandlerWithRequest[T]) TodoHandler {
 				"code": 500,
 				"msg":  "bad request",
 			})
+			c.Context().Abort()
 			return
 		}
 		res, err := fn(c, req)
@@ -32,6 +33,7 @@ func BindRequest[T any](fn TodoServerHandlerWithRequest[T]) TodoHandler {
 					"msg":  err.Error(),
 				})
 			}
+			c.Context().Abort()
 			return
 		}
 		c.Context().JSON(200, gin.H{

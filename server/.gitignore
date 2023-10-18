@@ -1,3 +1,5 @@
 include
 assets
 */log.index.json
+*.log
+*.exe

@@ -6,6 +6,11 @@ package topic;
 service TopicService {
     rpc CreateTopic (CreateTopicRequest) returns (CreateTopicResponse);
     rpc DeleteTopic (DeleteTopicRequest) returns (DeleteTopicResponse);
+    rpc JoinTopic (JoinTopicRequest) returns (JoinTopicResponse);
+    rpc GetTopicSubscriber (GetTopicSubscriberRequest) returns (GetTopicSubsriberResponse);
+    rpc GrantTopicAdmin (GrantAdminTopicRequest) returns (GrantAdminTopicResponse);
+    rpc UngrantAdminTopic (UngrantAdminTopicRequest) returns (UngrantAdminTopicResponse);
+    rpc MigrateTopicAdmin (MigrateTopicAdminRequest) returns (MigrateTopicAdminResponse);
 }
 
 message CreateTopicRequest {
@@ -22,3 +27,61 @@ message DeleteTopicRequest {
 }
 
 message DeleteTopicResponse {}
+
+message JoinTopicRequest {
+    string InviteCode = 1;
+}
+
+message JoinTopicResponse {}
+
+message GetTopicSubscriberRequest {
+    int32 TTID = 1;
+}
+
+message GetTopicSubsriberResponse {}
+
+message GrantAdminTopicRequest {
+    int32 ID = 1;
+}
+
+message GrantAdminTopicResponse {}
+
+message UngrantAdminTopicRequest {
+    int32 ID = 1;
+}
+
+message UngrantAdminTopicResponse {}
+
+message MigrateTopicAdminRequest {
+    int32 ID = 1;
+    int32 NewAdmin = 2;
+}
+
+message MigrateTopicAdminResponse {}
+
+message HistoryTopicRequest {}
+
+message HisotryTopicResponse {}
+
+message RemoveTopicMemberRequest {
+    int32 TTID = 1;
+    int32 UID = 2;
+}
+
+message RemoveTopicMemberResponse {}
+
+message ExitTopicRequest {
+    int32 ID = 1;
+}
+
+message ExitTopicResponse {}
+
+message ImportTopicMemeberRequest {}
+
+message ImportTopicMemeberResponse {}
+
+message GetTopicMemberRequest {
+    int32 ID = 1;
+}
+
+message GetTopicMemberResponse {}

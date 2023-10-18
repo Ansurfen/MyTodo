@@ -76,8 +76,8 @@ func (PostCommentV2) TableName() string {
 
 type PostFavorite struct {
 	sql.Model
-	PID uint `gorm:"column:pid"`
-	UID uint `gorm:"column:uid"`
+	PID uint `gorm:"uniqueIndex:unique_pid_uid;column:pid"`
+	UID uint `gorm:"uniqueIndex:unique_pid_uid;column:uid"`
 }
 
 func (PostFavorite) TableName() string {
@@ -98,9 +98,10 @@ type SnapshotPost struct {
 
 type DetailedPostComment struct {
 	PostCommentV2
-	Username  string `json:"username"`
-	ReplyName string `json:"reply_name"`
-	Favorite  int64  `json:"favorite"`
+	Username    string `json:"username"`
+	ReplyName   string `json:"reply_name"`
+	Favorite    int64  `json:"favorite"`
+	YouFavorite bool   `json:"you_favorite"`
 }
 
 type DetailedPostCommentFavorite struct {
@@ -109,11 +110,12 @@ type DetailedPostCommentFavorite struct {
 }
 
 type DetailedPost struct {
-	Id       uint   `json:"id" gorm:"column:id"`
-	Username string `json:"username" gorm:"column:username"`
-	Favorite int64  `json:"favorite" gorm:"column:favorite_count"`
-	UID      uint   `json:"uid" gorm:"column:uid"`
-	Content  string `json:"content" gorm:"column:content"`
-	IsMale   bool   `json:"isMale" gorm:"column:is_male"`
-	Images   Images `json:"images" gorm:"column:image"`
+	Id         uint   `json:"id" gorm:"column:id"`
+	Username   string `json:"username" gorm:"column:username"`
+	Favorite   int64  `json:"favorite" gorm:"column:favorite_count"`
+	IsFavorite bool   `json:"is_favorite" gorm:"column:is_favorite"`
+	UID        uint   `json:"uid" gorm:"column:uid"`
+	Content    string `json:"content" gorm:"column:content"`
+	IsMale     bool   `json:"isMale" gorm:"column:is_male"`
+	Images     Images `json:"images" gorm:"column:image"`
 }

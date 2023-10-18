@@ -6,14 +6,17 @@ import (
 	"MyTodo/utils"
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
 	"unicode"
 
 	rkboot "github.com/rookie-ninja/rk-boot/v2"
+	rkentry "github.com/rookie-ninja/rk-entry/v2/entry"
 	rkmidjwt "github.com/rookie-ninja/rk-entry/v2/middleware/jwt"
 	rkgrpc "github.com/rookie-ninja/rk-grpc/v2/boot"
+	rkgrpcjwt "github.com/rookie-ninja/rk-grpc/v2/middleware/jwt"
 )
 
 type ServiceUnit struct {
@@ -23,6 +26,10 @@ type ServiceUnit struct {
 }
 
 type GrpcBootConfig rkgrpc.BootConfig
+
+type IssuedConfig struct {
+	Jwt rkmidjwt.BootConfig `yaml:"jwt"`
+}
 
 // fix exceptional exit when meet null value
 func (c *GrpcBootConfig) fixedNullPointer() {
@@ -34,6 +41,7 @@ func (c *GrpcBootConfig) fixedNullPointer() {
 	}
 }
 
+// returns avaliable services
 func (c *GrpcBootConfig) Service() map[string]ServiceUnit {
 	infos := make(map[string]ServiceUnit)
 	for i := 0; i < len(c.Grpc); i++ {
@@ -67,6 +75,11 @@ func isInt(s string) bool {
 
 // equal to "gwOption: null"
 var gwOption = []byte{103, 119, 79, 112, 116, 105, 111, 110, 58, 32, 110, 117, 108, 108}
+
+var (
+	ErrInvalidTemplate = errors.New("invalid template")
+	ErrEmptyTemplate   = errors.New("empty template")
+)
 
 func New(opt Option) *GrpcServer {
 	tmp, err := os.CreateTemp("", "*.yaml")
@@ -113,7 +126,7 @@ func New(opt Option) *GrpcServer {
 		if unit, ok := services[prefix]; ok {
 			tmplIndex = unit.index
 		} else {
-			panic("invalid template")
+			panic(ErrInvalidTemplate)
 		}
 	} else {
 		prefix = "unknown"
@@ -132,7 +145,7 @@ func New(opt Option) *GrpcServer {
 			info.Enabled = true
 			cfg.Grpc = append(cfg.Grpc, info)
 		} else {
-			panic("empty template")
+			panic(ErrEmptyTemplate)
 		}
 	}
 
@@ -158,6 +171,33 @@ func New(opt Option) *GrpcServer {
 	return s
 }
 
+func (s *GrpcServer) ApplyIssuedMiddleware() {
+	var conf IssuedConfig
+	if err := s.DefaultUserConf().Unmarshal(&conf); err != nil {
+		panic(err)
+	}
+	if conf.Jwt.Enabled {
+		for name := range s.GrpcOption.Service() {
+			rkgrpc.GetGrpcEntry(name).AddUnaryInterceptors(rkgrpcjwt.UnaryServerInterceptor(rkmidjwt.ToOptions(
+				&rkmidjwt.BootConfig{
+					Enabled: true,
+					Symmetric: &rkmidjwt.SymmetricConfig{
+						Algorithm: conf.Jwt.Symmetric.Algorithm,
+						Token:     conf.Jwt.Symmetric.Token,
+					},
+					Ignore:      conf.Jwt.Ignore,
+					TokenLookup: conf.Jwt.TokenLookup,
+					AuthScheme:  conf.Jwt.AuthScheme,
+				}, name, rkgrpc.GrpcEntryType,
+			)...))
+		}
+	}
+}
+
+func (s *GrpcServer) DefaultUserConf() *rkentry.ConfigEntry {
+	return rkentry.GlobalAppCtx.GetConfigEntry("default")
+}
+
 func (s *GrpcServer) Bootstrap() {
 	s.rkb.Bootstrap(context.Background())
 }
@@ -168,13 +208,16 @@ type LoadOption struct {
 	GWHandlers   []rkgrpc.GwRegFunc
 }
 
-type GrpcLoadFuncs []rkgrpc.GrpcRegFunc
-type GWLoadFuncs []rkgrpc.GwRegFunc
+type (
+	GrpcLoadFuncs []rkgrpc.GrpcRegFunc
+	GWLoadFuncs   []rkgrpc.GwRegFunc
+)
 
-func (s *GrpcServer) Load(opt LoadOption) {
+func (s *GrpcServer) NewThread(opt LoadOption) *rkgrpc.GrpcEntry {
 	thread := rkgrpc.GetGrpcEntry(opt.Name)
 	thread.AddRegFuncGrpc(opt.GrpcHandlers...)
 	thread.AddRegFuncGw(opt.GWHandlers...)
+	return thread
 }
 
 func (s *GrpcServer) WaitForShutdownSig(shutdown ...func()) {
@@ -183,4 +226,3 @@ func (s *GrpcServer) WaitForShutdownSig(shutdown ...func()) {
 		shutdown[0]()
 	}
 }
-

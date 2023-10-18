@@ -4,5 +4,11 @@ config_version: 3
 # Please refer google.api.Http in https://github.com/googleapis/googleapis/blob/master/google/api/http.proto file for details.
 http:
   rules:
-    - selector: chat.ChatService.SayHello
-      get: /v1/greeter
+    # - selector: chat.ChatService.AddChat
+    #   post: /v2/chat/add
+    - selector: chat.ChatService.GetChat
+      post: /v2/chat/get
+    - selector: chat.ChatService.DelChat
+      post: /v2/chat/del
+    - selector: chat.ChatService.EditChat
+      post: /v2/chat/edit

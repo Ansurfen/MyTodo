@@ -4,16 +4,38 @@ option go_package="./;chat";
 package chat;
 
 service ChatService {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc AddChat (AddChatRequest) returns (AddChatResponse);
+  rpc GetChat (GetChatRequest) returns (GetChatResponse);
+  rpc DelChat (DelChatRequest) returns (DelChatResponse);
+  rpc EditChat (EditChatRequest) returns (EditChatResponse);
 }
 
-// The request message containing the user's name
-message HelloRequest {
-  string name = 1;
+message AddChatRequest {
+  int32 From = 1;
+  int32 To = 2;
+  string Reply = 3;
+  string Content = 4;
 }
 
-// The response message containing the greetings
-message HelloReply {
+message AddChatResponse {
   string message = 1;
 }
+
+message GetChatRequest {
+  int32 Page = 1;
+  int32 PageSize = 2;
+  int32 From = 3;
+  int32 To = 4;
+}
+
+message GetChatResponse {}
+
+message DelChatRequest {
+  string ID = 1;
+}
+
+message DelChatResponse {}
+
+message EditChatRequest {}
+
+message EditChatResponse {}

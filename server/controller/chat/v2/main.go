@@ -1,9 +1,9 @@
 package main
 
 import (
+	proto "MyTodo/api/v2/chat"
 	"MyTodo/conf"
 	"MyTodo/engine/v2/starter"
-	proto "MyTodo/api/v2/chat"
 	"MyTodo/log"
 	"MyTodo/middleware/driver/etcd/v1"
 
@@ -36,7 +36,7 @@ func main() {
 
 	for name, metadata := range srv.GrpcOption.Service() {
 		if metadata.Enabled {
-			srv.Load(starter.LoadOption{
+			srv.NewThread(starter.LoadOption{
 				Name:         name,
 				GrpcHandlers: starter.GrpcLoadFuncs{regServer},
 				GWHandlers:   starter.GWLoadFuncs{proto.RegisterChatServiceHandlerFromEndpoint},
@@ -72,6 +72,6 @@ type Server struct {
 	proto.UnimplementedChatServiceServer
 }
 
-func (s *Server) SayHello(ctx context.Context, req *proto.HelloRequest) (*proto.HelloReply, error) {
-	return &proto.HelloReply{Message: "topic"}, nil
+func (s *Server) AddChat(ctx context.Context, req *proto.AddChatRequest) (*proto.AddChatResponse, error) {
+	return &proto.AddChatResponse{Message: "topic"}, nil
 }

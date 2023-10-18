@@ -1,6 +1,8 @@
 package log
 
-import interfaces "MyTodo/interface"
+import (
+	interfaces "MyTodo/interface"
+)
 
 var logger interfaces.Logger = &Glog{}
 

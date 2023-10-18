@@ -64,7 +64,7 @@ func (pc *PostCommentDao) Edit(c *po.PostComment) error {
 	return db.SQL().Updates(c).Error
 }
 
-func (pc *PostCommentDao) Del(pid, uid int) error {
+func (pc *PostCommentDao) Delete(pid, uid int) error {
 	return db.SQL().Where(PostCommentDao{
 		PostComment: po.PostComment{
 			PID: uint(pid),
@@ -86,7 +86,7 @@ func (pf *PostFavoriteDao) Get(pid int) (ret int64, err error) {
 	return
 }
 
-func (pf *PostFavoriteDao) Del(pid, uid int) error {
+func (pf *PostFavoriteDao) Delete(pid, uid int) error {
 	return db.SQL().Unscoped().Delete(&po.PostFavorite{}, "pid = ? AND uid = ?", pid, uid).Error
 }
 
@@ -95,7 +95,10 @@ type PostCommentV2 struct {
 }
 
 func (c *PostCommentV2) Create(comment *po.PostCommentV2) error {
-	_, err := c.Collection().InsertOne(context.Background(), comment)
+	res, err := c.Collection().InsertOne(context.Background(), comment)
+	if err == nil {
+		comment.ID = res.InsertedID.(primitive.ObjectID)
+	}
 	return err
 }
 
@@ -182,7 +185,7 @@ func (c *PostCommentV2) Get(id, page, pageSize int) ([]po.PostCommentV2, error) 
 	findOptions := options.Find()
 	findOptions.SetLimit(int64(pageSize))
 	findOptions.SetSkip(int64((page - 1) * pageSize))
-	
+
 	cur, err := c.Collection().Find(context.Background(), bson.M{"pid": id, "deleted_at": time.Time{}}, findOptions)
 	if err != nil {
 		return nil, err
@@ -219,5 +222,10 @@ func (PostCommentFavorite) Delete(cid string, uid int) error {
 
 func (PostCommentFavorite) Count(cid string) (res int64, err error) {
 	err = db.SQL().Model(po.PostCommentFavorite{}).Where("cid = ?", cid).Count(&res).Error
+	return
+}
+
+func (PostCommentFavorite) FindByUID(uid int) (res []po.PostCommentFavorite, err error) {
+	err = db.SQL().Model(po.PostCommentFavorite{}).Where("uid = ?", uid).Find(&res).Error
 	return
 }

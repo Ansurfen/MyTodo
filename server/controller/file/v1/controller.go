@@ -75,7 +75,6 @@ func (c *FileController) profileIdenticonStyle1(id int) {
 				return
 			}
 			dir, err = vfs.Pathf(fmt.Sprintf("oss:%s/%s", bucket, obejct))
-			fmt.Println(dir, err)
 			if err != nil {
 				c.ctx.Throw(err)
 				return

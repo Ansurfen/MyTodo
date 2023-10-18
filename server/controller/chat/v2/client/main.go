@@ -35,7 +35,7 @@ func main() {
 	c := proto.NewChatServiceClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	r, err := c.SayHello(ctx, &proto.HelloRequest{})
+	r, err := c.AddChat(ctx, &proto.AddChatRequest{})
 	if err != nil {
 		panic(err)
 	}

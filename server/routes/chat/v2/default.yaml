@@ -1,0 +1,25 @@
+jwt:
+  enabled: false
+  symmetric:
+    algorithm: HS256
+    token: "my_todo_key"
+    tokenPath: ""
+  signerEntry: ""
+  ignore:
+    # - "/topic.TopicService/CreateTopic"
+  tokenLookup: "header:x-token"
+  # skipVerify: false
+  asymmetric:
+    algorithm: RS256
+    privateKey:
+    privateKeyPath: ./pri.pem
+    publicKey:
+    publicKeyPath: ./pub.pem
+  authScheme: "Bearer"
+sql:
+  charset: utf8
+  database: todo
+  host: 192.168.127.130
+  port: 3306
+  username: root
+  password: 123456

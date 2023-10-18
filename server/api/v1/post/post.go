@@ -2,6 +2,7 @@ package api
 
 import (
 	interfaces "MyTodo/interface"
+	"MyTodo/model/bo/v1"
 	"MyTodo/model/po/v1"
 	"mime/multipart"
 )
@@ -41,7 +42,7 @@ type GetPostRequest struct {
 
 type GetPostResponse struct {
 	interfaces.BaseResponse
-	Posts []po.SnapshotPost `json:"posts"`
+	Posts []bo.SnapshotPost `json:"posts"`
 }
 
 type InfoPostRequest struct{}
@@ -56,6 +57,7 @@ type FavoritePostRequest struct {
 
 type FavoritePostResponse struct {
 	interfaces.BaseResponse
+	Success bool `json:"success"`
 }
 
 type UnfavoritePostRequest struct {
@@ -64,6 +66,7 @@ type UnfavoritePostRequest struct {
 
 type UnfavoritePostResponse struct {
 	interfaces.BaseResponse
+	Success bool `json:"success"`
 }
 
 type GetPostFavoriteRequest struct {
@@ -95,6 +98,7 @@ type CreateCommentPostRequest struct {
 
 type CreateCommentPostResponse struct {
 	interfaces.BaseResponse
+	ID string `json:"id"`
 }
 
 type EditCommentPostRequest struct {
@@ -124,6 +128,7 @@ type PostCommentReplyCreateRequest struct {
 
 type PostCommentReplyCreateResponse struct {
 	interfaces.BaseResponse
+	ID string `json:"id"`
 }
 
 type PostCommentReplyEditRequest struct {
@@ -150,8 +155,18 @@ type PostCommentFavoriteRequest struct {
 	CommentID string `form:"comment_id"`
 }
 
+type PostCommentFavoriteResponse struct {
+	interfaces.BaseResponse
+	Success bool `json:"success"`
+}
+
 type PostCommentUnfavoriteRequest struct {
 	CommentID string `form:"comment_id"`
+}
+
+type PostCommentUnfavoriteResponse struct {
+	interfaces.BaseResponse
+	Success bool `json:"success"`
 }
 
 type PostCommentFavoriteCountRequest struct {

@@ -48,7 +48,10 @@ func CreatePost(ctx starter.TodoContext, req api.CreatePostRequest) (interfaces.
 	return api.CreatePostResponse{}, nil
 }
 
-func GetPost(ctx starter.TodoContext, req api.GetPostRequest) (interfaces.Response, error) {
+func GetPost(
+	ctx starter.TodoContext,
+	req api.GetPostRequest) (
+	interfaces.Response, error) {
 	posts, err := postController.Get(ctx).GetPost(req.Page, req.Count)
 	if err != nil {
 		return ctx.ThrowWithResult(err)
@@ -63,11 +66,19 @@ func GetPost(ctx starter.TodoContext, req api.GetPostRequest) (interfaces.Respon
 // @Tags Post
 // @Param page query int true "page"
 // @Param count query int true "count"
+// @Param x-token header string true "user jwt"
 // @Success 200 {string} Success
 // @failure 200 {object} string
 // @Router /post/get [get]
-func GetPostV2(ctx starter.TodoContext, req api.GetPostRequest) (interfaces.Response, error) {
-	posts, err := postController.Get(ctx).GetPostV2(req.Page, req.Count)
+func GetPostV2(
+	ctx starter.TodoContext,
+	req api.GetPostRequest) (
+	interfaces.Response, error) {
+	uc, err := userController.Get(ctx)
+	if err != nil {
+		return ctx.ThrowWithResult(err)
+	}
+	posts, err := postController.Get(ctx).GetPostV2(int(uc.User.ID), req.Page, req.Count)
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
@@ -80,16 +91,24 @@ func GetPostV2(ctx starter.TodoContext, req api.GetPostRequest) (interfaces.Resp
 // @Description get post detail
 // @Tags Post
 // @Param id path int true "pid"
+// @Param x-token header string true "user jwt"
 // @Success 200 {string} Success
 // @failure 200 {object} string
 // @Router /post/detail/{id} [get]
-func PostDetail(ctx starter.TodoContext, req interfaces.EmptyRequest) (interfaces.Response, error) {
+func PostDetail(
+	ctx starter.TodoContext,
+	req interfaces.EmptyRequest) (
+	interfaces.Response, error) {
+	uc, err := userController.Get(ctx)
+	if err != nil {
+		return ctx.ThrowWithResult(err)
+	}
 	id, err := strconv.Atoi(ctx.Context().Param("id"))
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
 	pc := postController.Get(ctx)
-	res, err := pc.GetPostDetail(id)
+	res, err := pc.GetPostDetail(int(uc.User.ID), id)
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
@@ -134,16 +153,22 @@ func PostImage(ctx starter.TodoContext) {
 // @Success 200 {string} Success
 // @failure 200 {object} string
 // @Router /post/favorite/add [post]
-func FavoritePost(ctx starter.TodoContext, req api.FavoritePostRequest) (interfaces.Response, error) {
+func FavoritePost(
+	ctx starter.TodoContext,
+	req api.FavoritePostRequest) (
+	interfaces.Response, error) {
 	uc, err := userController.Get(ctx)
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
 	err = postController.Get(ctx).CreatePostFavorite(req.Pid, uc.User.ID)
+	success := true
 	if err != nil {
-		return api.FavoritePostResponse{}, err
+		success = false
 	}
-	return api.FavoritePostResponse{}, nil
+	return api.FavoritePostResponse{
+		Success: success,
+	}, nil
 }
 
 // @Summary Unfavorite Post
@@ -155,15 +180,21 @@ func FavoritePost(ctx starter.TodoContext, req api.FavoritePostRequest) (interfa
 // @Success 200 {string} Success
 // @failure 200 {object} string
 // @Router /post/favorite/del [post]
-func UnfavoritePost(ctx starter.TodoContext, req api.UnfavoritePostRequest) (interfaces.Response, error) {
+func UnfavoritePost(
+	ctx starter.TodoContext,
+	req api.UnfavoritePostRequest) (
+	interfaces.Response, error) {
 	uc, err := userController.Get(ctx)
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
+	success := true
 	if err := postController.Get(ctx).DelPostFavorite(req.Pid, int(uc.User.ID)); err != nil {
-		return api.UnfavoritePostResponse{}, err
+		success = false
 	}
-	return api.UnfavoritePostResponse{}, nil
+	return api.UnfavoritePostResponse{
+		Success: success,
+	}, nil
 }
 
 // @Summary Favorite Post count
@@ -200,17 +231,20 @@ func CreateCommentPost(ctx starter.TodoContext, req api.CreateCommentPostRequest
 		return ctx.ThrowWithResult(err)
 	}
 	pc := postController.Get(ctx)
-	err = pc.PostCommentV2Dao.Create(&po.PostCommentV2{
+	comment := &po.PostCommentV2{
 		CreatedAt: time.Now(),
 		Reply:     req.Reply,
 		PID:       uint(req.PID),
 		UID:       uc.User.ID,
 		Content:   []string{req.Content},
-	})
+	}
+	err = pc.PostCommentV2Dao.Create(comment)
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
-	return api.CreateCommentPostResponse{}, nil
+	return api.CreateCommentPostResponse{
+		ID: comment.ID.Hex(),
+	}, nil
 }
 
 // @Summary Edit Comment Post
@@ -264,10 +298,18 @@ func DelCommentPost(ctx starter.TodoContext, req api.DelCommentPostRequest) (int
 // @Param pid formData int true "pid"
 // @Param page formData int true "page"
 // @Param pageSize formData int true "pageSize"
+// @Param x-token header string true "user jwt"
 // @Success 200 {string} Success
 // @failure 200 {object} string
 // @Router /post/comment/get [post]
-func GetCommentPost(ctx starter.TodoContext, req api.GetCommentPostRequest) (interfaces.Response, error) {
+func GetCommentPost(
+	ctx starter.TodoContext,
+	req api.GetCommentPostRequest) (
+	interfaces.Response, error) {
+	uc, err := userController.Get(ctx)
+	if err != nil {
+		return ctx.ThrowWithResult(err)
+	}
 	pc := postController.Get(ctx)
 	res, err := pc.PostCommentV2Dao.Get(req.PID, req.Page, req.PageSize)
 	if err != nil {
@@ -285,10 +327,6 @@ func GetCommentPost(ctx starter.TodoContext, req api.GetCommentPostRequest) (int
 	for _, n := range res {
 		uids = append(uids, n.UID)
 		replys = append(replys, n.Reply)
-	}
-	uc, err := userController.GetBlank(ctx)
-	if err != nil {
-		return ctx.ThrowWithResult(err)
 	}
 	users, err := uc.BatchFindUserByUID(uids)
 	if err != nil {
@@ -311,11 +349,22 @@ func GetCommentPost(ctx starter.TodoContext, req api.GetCommentPostRequest) (int
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
-
+	postFavoriteDict := make(map[string]struct{})
+	postFavorites, err := pc.PostCommentFavorite.FindByUID(int(uc.User.ID))
+	if err != nil {
+		return ctx.ThrowWithResult(err)
+	}
+	for _, id := range postFavorites {
+		postFavoriteDict[id.CID] = struct{}{}
+	}
 	for _, f := range favorites {
 		dict[f.CID] = f.Count
 	}
 	for _, n := range res {
+		selected := false
+		if _, ok := postFavoriteDict[n.ID.Hex()]; ok {
+			selected = true
+		}
 		cnt := int64(0)
 		if v, ok := dict[n.ID.Hex()]; ok {
 			cnt = v
@@ -333,6 +382,7 @@ func GetCommentPost(ctx starter.TodoContext, req api.GetCommentPostRequest) (int
 			Username:      username,
 			ReplyName:     replyname,
 			Favorite:      cnt,
+			YouFavorite:   selected,
 		})
 	}
 	return api.GetCommentPostResponse{
@@ -369,7 +419,9 @@ func PostCommentReplyCreate(
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
-	return api.PostCommentReplyCreateResponse{}, nil
+	return api.PostCommentReplyCreateResponse{
+		ID: req.Id,
+	}, nil
 }
 
 // @Summary Edit Comment Reply
@@ -440,11 +492,17 @@ func PostCommentFavorite(ctx starter.TodoContext, req api.PostCommentFavoriteReq
 		return ctx.ThrowWithResult(err)
 	}
 	pc := postController.Get(ctx)
-	pc.PostCommentFavorite.Create(&po.PostCommentFavorite{
+	err = pc.PostCommentFavorite.Create(&po.PostCommentFavorite{
 		CID: req.CommentID,
 		UID: uc.User.ID,
 	})
-	return interfaces.BaseResponse{}, nil
+	sc := true
+	if err != nil {
+		sc = false
+	}
+	return api.PostCommentFavoriteResponse{
+		Success: sc,
+	}, nil
 }
 
 // @Summary Unfavorite comment
@@ -463,10 +521,13 @@ func PostCommentUnfavorite(ctx starter.TodoContext, req api.PostCommentUnfavorit
 	}
 	pc := postController.Get(ctx)
 	err = pc.PostCommentFavorite.Delete(req.CommentID, int(uc.User.ID))
+	success := true
 	if err != nil {
-		return ctx.ThrowWithResult(err)
+		success = false
 	}
-	return interfaces.BaseResponse{}, nil
+	return api.PostCommentUnfavoriteResponse{
+		Success: success,
+	}, nil
 }
 
 // @Summary Get count of the comment favorite
