@@ -28,7 +28,7 @@ PostComment _$PostCommentFromJson(Map<String, dynamic> json) => PostComment(
       pid: json['pid'] as int? ?? 0,
       uid: json['uid'] as int? ?? 0,
       reply: json['reply'] as int? ?? 0,
-      username: json['username'] as String,
+      username: json['username'] as String? ?? '',
       replyName: json['reply_name'] as String? ?? '',
       createdAt: DateTime.parse(json['created_at'] as String),
       content:
@@ -42,6 +42,7 @@ PostComment _$PostCommentFromJson(Map<String, dynamic> json) => PostComment(
               .toList() ??
           [],
       favorite: json['favorite'] as int? ?? 0,
+      youFavorite: json['you_favorite'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$PostCommentToJson(PostComment instance) =>
@@ -57,4 +58,5 @@ Map<String, dynamic> _$PostCommentToJson(PostComment instance) =>
       'replies': instance.replies,
       'favorite': instance.favorite,
       'images': instance.images,
+      'you_favorite': instance.youFavorite,
     };

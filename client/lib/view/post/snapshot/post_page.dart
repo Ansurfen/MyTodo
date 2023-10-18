@@ -1,56 +1,25 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_todo/api/post.dart';
 import 'package:my_todo/component/container/empty_container.dart';
-import 'package:my_todo/hook/post.dart';
-import 'package:my_todo/model/entity/post.dart';
 import 'package:my_todo/theme/provider.dart';
 import 'package:my_todo/view/home/nav/component/app_bar.dart';
 import 'package:my_todo/theme/color.dart';
 import 'package:my_todo/utils/dialog.dart';
-import 'package:my_todo/utils/guard.dart';
 import 'package:my_todo/component/refresh.dart';
 import 'package:my_todo/view/post/snapshot/post_card.dart';
 import 'package:my_todo/model/vo/post.dart';
+import 'package:my_todo/view/post/snapshot/post_snapshot_controller.dart';
 
-class PostPage extends StatefulWidget {
-  const PostPage({super.key});
+class PostSnapshotPage extends StatefulWidget {
+  const PostSnapshotPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _PostPageState();
+  State<StatefulWidget> createState() => _PostSnapshotPageState();
 }
 
-class _PostPageState extends State<PostPage>
+class _PostSnapshotPageState extends State<PostSnapshotPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
-  List<Widget> views = [];
-  late StreamSubscription<Post> _uploadPost;
-  late TabController tabController;
-  @override
-  void initState() {
-    super.initState();
-    tabController = TabController(length: 3, vsync: this, initialIndex: 1);
-    Future.delayed(Duration.zero, () {
-      getPost(GetPostRequest(1, 10)).then((res) {
-        for (var post in res.data) {
-          views.add(PostCard(model: GetPostVo.fromDto(post)));
-          views.add(_postCardSpace());
-        }
-        setState(() {});
-      }).catchError((err) {
-        showError(err);
-      });
-    });
-    _uploadPost = PostHook.subscribeSnapshot(onData: (post) {
-      setState(() {
-        views.add(PostCard(
-            model: GetPostVo(0, 0, Guard.userName(), true, DateTime.timestamp(),
-                post.content, [], 0, 0)));
-        views.add(_postCardSpace());
-      });
-    });
-  }
+  PostSnapshotController controller = Get.find<PostSnapshotController>();
 
   Widget _postCardSpace() {
     return Container(
@@ -62,15 +31,8 @@ class _PostPageState extends State<PostPage>
   }
 
   @override
-  void dispose() {
-    _uploadPost.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
-    Size size = MediaQuery.sizeOf(context);
     return Scaffold(
         appBar: AppBar(
             actions: [
@@ -83,7 +45,7 @@ class _PostPageState extends State<PostPage>
             centerTitle: true,
             backgroundColor: Theme.of(context).colorScheme.primary,
             title: TabBar(
-              controller: tabController,
+              controller: controller.tabController,
               isScrollable: true,
               labelColor: Theme.of(context).colorScheme.onPrimary,
               unselectedLabelColor: Theme.of(context).colorScheme.onTertiary,
@@ -108,7 +70,7 @@ class _PostPageState extends State<PostPage>
             )),
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: TabBarView(
-          controller: tabController,
+          controller: controller.tabController,
           children: [_me(), _find(), _friend()],
         ));
   }
@@ -117,35 +79,32 @@ class _PostPageState extends State<PostPage>
     return refreshContainer(
         context: context,
         onLoad: () {},
-        onRefresh: () {
-          views.clear();
-          getPost(GetPostRequest(1, 10)).then((res) {
-            for (var post in res.data) {
-              views.add(PostCard(model: GetPostVo.fromDto(post)));
-              views.add(_postCardSpace());
-            }
-            setState(() {});
-          }).catchError((err) {
-            showError(err);
-          });
-        },
-        child: EmptyContainer(
+        onRefresh: controller.fetch,
+        child: Obx(() => EmptyContainer(
             icon: Icons.rss_feed,
             desc: "not post, clicks + button to create on bottom bar",
             what: "what is post?",
-            render: views.isNotEmpty,
+            render: controller.data.value.isNotEmpty,
             alignment: Alignment.center,
             padding:
                 EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.35),
             onTap: () {
               showTipDialog(context, content: "what_is_post".tr);
             },
-            child: ListView.builder(
-              itemCount: views.length,
+            child: ListView.separated(
+              itemCount: controller.data.value.length,
               itemBuilder: (BuildContext context, int index) {
-                return views[index];
+                return PostCard(
+                    more: () {
+                      controller.handlePost(context);
+                    },
+                    model:
+                        PostDetailModel.fromDto(controller.data.value[index]));
               },
-            )));
+              separatorBuilder: (BuildContext context, int index) {
+                return _postCardSpace();
+              },
+            ))));
   }
 
   Widget _find() {
@@ -153,23 +112,31 @@ class _PostPageState extends State<PostPage>
         context: context,
         onLoad: () {},
         onRefresh: () {},
-        child: EmptyContainer(
+        child: Obx(() => EmptyContainer(
             icon: Icons.rss_feed,
             desc: "not post, clicks + button to create on bottom bar",
             what: "what is post?",
-            render: views.isNotEmpty,
+            render: controller.data.value.isNotEmpty,
             alignment: Alignment.center,
             padding:
                 EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.35),
             onTap: () {
               showTipDialog(context, content: "what_is_post".tr);
             },
-            child: ListView.builder(
-              itemCount: views.length,
+            child: ListView.separated(
+              itemCount: controller.data.value.length,
               itemBuilder: (BuildContext context, int index) {
-                return views[index];
+                return PostCard(
+                    more: () {
+                      controller.handlePost(context);
+                    },
+                    model:
+                        PostDetailModel.fromDto(controller.data.value[index]));
               },
-            )));
+              separatorBuilder: (BuildContext context, int index) {
+                return _postCardSpace();
+              },
+            ))));
   }
 
   Widget _friend() {
@@ -177,23 +144,31 @@ class _PostPageState extends State<PostPage>
         context: context,
         onLoad: () {},
         onRefresh: () {},
-        child: EmptyContainer(
+        child: Obx(() => EmptyContainer(
             icon: Icons.rss_feed,
             desc: "not post, clicks + button to create on bottom bar",
             what: "what is post?",
-            render: views.isNotEmpty,
+            render: controller.data.value.isNotEmpty,
             alignment: Alignment.center,
             padding:
                 EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.35),
             onTap: () {
               showTipDialog(context, content: "what_is_post".tr);
             },
-            child: ListView.builder(
-              itemCount: views.length,
+            child: ListView.separated(
+              itemCount: controller.data.value.length,
               itemBuilder: (BuildContext context, int index) {
-                return views[index];
+                return PostCard(
+                    more: () {
+                      controller.handlePost(context);
+                    },
+                    model:
+                        PostDetailModel.fromDto(controller.data.value[index]));
               },
-            )));
+              separatorBuilder: (BuildContext context, int index) {
+                return _postCardSpace();
+              },
+            ))));
   }
 
   @override

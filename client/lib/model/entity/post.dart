@@ -51,7 +51,7 @@ class PostComment {
   @JsonKey(name: "reply", defaultValue: 0)
   int reply;
 
-  @JsonKey(name: "username")
+  @JsonKey(name: "username", defaultValue: '')
   String username;
 
   @JsonKey(name: "reply_name", defaultValue: "")
@@ -72,6 +72,9 @@ class PostComment {
   @JsonKey(name: "images", defaultValue: [])
   List<String> images;
 
+  @JsonKey(name: "you_favorite", defaultValue: false)
+  bool youFavorite;
+
   PostComment(
       {this.id = '',
       this.pid = 0,
@@ -83,7 +86,8 @@ class PostComment {
       required this.content,
       required this.replies,
       required this.images,
-      this.favorite = 0});
+      this.favorite = 0,
+      this.youFavorite = false});
 
   factory PostComment.fromJson(JsonObject json) {
     var v = _$PostCommentFromJson(json);

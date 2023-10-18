@@ -12,7 +12,7 @@ class GetPostDto {
   @JsonKey(name: "uid", defaultValue: 0)
   int uid;
 
-  @JsonKey(name: "user", defaultValue: "")
+  @JsonKey(name: "username", defaultValue: "")
   String username;
 
   @JsonKey(name: "isMale", defaultValue: true)
@@ -33,8 +33,20 @@ class GetPostDto {
   @JsonKey(name: "cc", defaultValue: 0)
   int commentCnt;
 
-  GetPostDto(this.id, this.uid, this.username, this.isMale, this.createAt,
-      this.content, this.images, this.favoriteCnt, this.commentCnt);
+  @JsonKey(name: "is_favorite", defaultValue: false)
+  bool isFavorite;
+
+  GetPostDto(
+      this.id,
+      this.uid,
+      this.username,
+      this.isMale,
+      this.createAt,
+      this.content,
+      this.images,
+      this.favoriteCnt,
+      this.commentCnt,
+      this.isFavorite);
 
   Map<String, dynamic> toJson() => _$GetPostDtoToJson(this);
 

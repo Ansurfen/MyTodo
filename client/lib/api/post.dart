@@ -30,7 +30,6 @@ class GetPostResponse extends BaseResponse {
 Future<GetPostResponse> getPost(GetPostRequest req) async {
   if (Guard.isOffline()) {
     await PostDao.findMany();
-    // res.map((e) => null)
     return GetPostResponse((await PostDao.findMany())
         .map((e) => GetPostDto(
             e.id ?? 0,
@@ -41,11 +40,13 @@ Future<GetPostResponse> getPost(GetPostRequest req) async {
             e.content,
             [],
             0,
-            0))
+            0,
+            false))
         .toList());
   }
-  return GetPostResponse.fromResponse(await HTTP
-      .get("/post/get", queryParams: {'page': req.page, 'count': req.count}));
+  return GetPostResponse.fromResponse(await HTTP.get("/post/get",
+      queryParams: {'page': req.page, 'count': req.count},
+      options: Options(headers: {'x-token': Guard.jwt})));
 }
 
 // @FormDataSerializable()
@@ -125,11 +126,13 @@ class GetPostCommentResponse extends BaseResponse {
 
   GetPostCommentResponse() : super({});
 
-  GetPostCommentResponse.fromResponse(Response res)
-      : comments = (res.data["data"]["comments"] as List)
+  GetPostCommentResponse.fromResponse(Response res) : super(res.data) {
+    comments = res.data["data"]["comments"] != null
+        ? (res.data["data"]["comments"] as List)
             .map((e) => PostComment.fromJson(e))
-            .toList(),
-        super(res.data);
+            .toList()
+        : [];
+  }
 }
 
 Future<GetPostCommentResponse> getPostComment(GetPostCommentRequest req) async {
@@ -137,7 +140,11 @@ Future<GetPostCommentResponse> getPostComment(GetPostCommentRequest req) async {
     return GetPostCommentResponse();
   }
   return GetPostCommentResponse.fromResponse(
-      await HTTP.post('/post/comment/get', data: req.toFormData()));
+      await HTTP.post('/post/comment/get',
+          data: req.toFormData(),
+          options: Options(headers: {
+            "x-token": Guard.jwt,
+          })));
 }
 
 class PostCommentFavoriteCountRequest {
@@ -181,21 +188,247 @@ class PostDetailResponse extends BaseResponse {
   @JsonKey(name: "favorite", defaultValue: 0)
   late int favorite;
 
+  @JsonKey(name: "is_favorite", defaultValue: false)
+  late bool isFavorite;
+
   @JsonKey(name: "uid", defaultValue: 0)
   late int uid;
 
+  @JsonKey(name: "isMale", defaultValue: false)
+  late bool isMale;
+
+  @JsonKey(name: "images", defaultValue: [])
+  late List<String> images;
+
+  @JsonKey(name: "content", defaultValue: '')
+  late String content;
+
   PostDetailResponse(
-      {required this.username, required this.favorite, required this.uid})
+      {required this.username,
+      required this.isFavorite,
+      required this.favorite,
+      required this.uid})
       : super({});
 
   PostDetailResponse.fromResponse(Response res) : super(res.data) {
     username = res.data["data"]["username"];
     uid = res.data["data"]["uid"];
     favorite = res.data["data"]["favorite"];
+    isMale = res.data["data"]["isMale"];
+    images = res.data["data"]["images"] ?? [];
+    content = res.data["data"]["content"];
+    isFavorite = res.data["data"]["is_favorite"];
   }
 }
 
 Future<PostDetailResponse> postDetail(PostDetailRequest req) async {
-  return PostDetailResponse.fromResponse(
-      await HTTP.get('/post/detail/${req.id}'));
+  return PostDetailResponse.fromResponse(await HTTP.get(
+      '/post/detail/${req.id}',
+      options: Options(headers: {'x-token': Guard.jwt})));
+}
+
+class PostAddCommentRequest {
+  int reply;
+
+  String content;
+
+  int id;
+
+  PostAddCommentRequest(
+      {required this.id, required this.reply, required this.content});
+
+  FormData toFormData() {
+    FormData formData = FormData();
+    formData.fields.addAll({
+      'pid': "$id",
+      'reply': "$reply",
+      'content': content,
+    }.entries);
+    return formData;
+  }
+}
+
+class PostAddCommentResponse extends BaseResponse {
+  late String id;
+
+  PostAddCommentResponse({required this.id}) : super({});
+
+  PostAddCommentResponse.fromResponse(Response res) : super(res.data) {
+    id = res.data["data"]["id"];
+  }
+}
+
+Future<PostAddCommentResponse> postAddComment(PostAddCommentRequest req) async {
+  return PostAddCommentResponse.fromResponse(
+      await HTTP.post("/post/comment/add",
+          data: req.toFormData(),
+          options: Options(headers: {
+            "x-token": Guard.jwt,
+          })));
+}
+
+class PostAddCommentReplyRequest {
+  String id;
+
+  String content;
+
+  int reply;
+
+  PostAddCommentReplyRequest(
+      {required this.id, required this.reply, required this.content});
+
+  FormData toFormData() {
+    FormData formData = FormData();
+    formData.fields.addAll({
+      'id': id,
+      'reply': "$reply",
+      'content': content,
+    }.entries);
+    return formData;
+  }
+}
+
+class PostAddCommentReplyResponse extends BaseResponse {
+  late String id;
+
+  PostAddCommentReplyResponse({required this.id}) : super({});
+
+  PostAddCommentReplyResponse.fromResponse(Response res) : super(res.data) {
+    id = res.data["data"]["id"];
+  }
+}
+
+Future<PostAddCommentReplyResponse> postAddCommentReply(
+    PostAddCommentReplyRequest req) async {
+  return PostAddCommentReplyResponse.fromResponse(
+      await HTTP.post("/post/comment/reply/add",
+          data: req.toFormData(),
+          options: Options(headers: {
+            "x-token": Guard.jwt,
+          })));
+}
+
+class PostCommentFavoriteRequest {
+  String id;
+
+  PostCommentFavoriteRequest({required this.id});
+
+  FormData toFormData() {
+    FormData formData = FormData();
+    formData.fields.addAll({'comment_id': id}.entries);
+    return formData;
+  }
+}
+
+class PostCommentFavoriteResponse extends BaseResponse {
+  bool success = false;
+
+  PostCommentFavoriteResponse(super.json);
+
+  PostCommentFavoriteResponse.fromResponse(Response res)
+      : success = res.data["data"]["success"],
+        super(res.data);
+}
+
+Future<PostCommentFavoriteResponse> postCommentFavorite(
+    PostCommentFavoriteRequest req) async {
+  return PostCommentFavoriteResponse.fromResponse(
+      await HTTP.post("/post/comment/favorite",
+          data: req.toFormData(),
+          options: Options(headers: {
+            "x-token": Guard.jwt,
+          })));
+}
+
+class PostCommentUnFavoriteRequest {
+  late String id;
+
+  PostCommentUnFavoriteRequest({required this.id});
+
+  FormData toFormData() {
+    FormData formData = FormData();
+    formData.fields.addAll({'comment_id': id}.entries);
+    return formData;
+  }
+}
+
+class PostCommentUnFavoriteResponse extends BaseResponse {
+  bool success = false;
+
+  PostCommentUnFavoriteResponse(super.json);
+
+  PostCommentUnFavoriteResponse.fromResponse(Response res)
+      : success = res.data["data"]["success"],
+        super(res.data);
+}
+
+Future<PostCommentUnFavoriteResponse> postCommentUnFavorite(
+    PostCommentUnFavoriteRequest req) async {
+  return PostCommentUnFavoriteResponse.fromResponse(
+      await HTTP.post('/post/comment/unfavorite',
+          data: req.toFormData(),
+          options: Options(headers: {
+            "x-token": Guard.jwt,
+          })));
+}
+
+class PostFavoriteRequest {
+  late int id;
+
+  PostFavoriteRequest({required this.id});
+
+  FormData toFormData() {
+    FormData formData = FormData();
+    formData.fields.addAll({'pid': "$id"}.entries);
+    return formData;
+  }
+}
+
+class PostFavoriteResponse extends BaseResponse {
+  bool success = false;
+
+  PostFavoriteResponse(super.json);
+
+  PostFavoriteResponse.fromResponse(Response res)
+      : success = res.data["data"]["success"],
+        super(res.data);
+}
+
+Future<PostFavoriteResponse> postFavorite(PostFavoriteRequest req) async {
+  return PostFavoriteResponse.fromResponse(await HTTP.post('/post/favorite/add',
+      data: req.toFormData(),
+      options: Options(headers: {
+        "x-token": Guard.jwt,
+      })));
+}
+
+class PostUnFavoriteRequest {
+  late int id;
+
+  PostUnFavoriteRequest({required this.id});
+
+  FormData toFormData() {
+    FormData formData = FormData();
+    formData.fields.addAll({'pid': "$id"}.entries);
+    return formData;
+  }
+}
+
+class PostUnFavoriteResponse extends BaseResponse {
+  bool success = false;
+
+  PostUnFavoriteResponse(super.json);
+
+  PostUnFavoriteResponse.fromResponse(Response res)
+      : success = res.data["data"]["success"],
+        super(res.data);
+}
+
+Future<PostUnFavoriteResponse> postUnFavorite(PostUnFavoriteRequest req) async {
+  return PostUnFavoriteResponse.fromResponse(
+      await HTTP.post('/post/favorite/del',
+          data: req.toFormData(),
+          options: Options(headers: {
+            "x-token": Guard.jwt,
+          })));
 }

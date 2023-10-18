@@ -6,6 +6,7 @@ import 'package:my_todo/component/tabIcon/tabIcon_data.dart';
 import 'package:my_todo/view/chat/snapshot/chat_controller.dart';
 import 'package:my_todo/view/chat/snapshot/chat_page.dart';
 import 'package:my_todo/view/post/snapshot/post_page.dart';
+import 'package:my_todo/view/post/snapshot/post_snapshot_controller.dart';
 import 'package:my_todo/view/task/snapshot/task_controller.dart';
 import 'package:my_todo/view/task/snapshot/task_page.dart';
 import 'package:my_todo/view/topic/snapshot/topic_controller.dart';
@@ -66,7 +67,7 @@ class NavigatorController extends GetxController
     const TaskPage(),
     const TopicSnapshotPage(),
     const ChatPage(),
-    const PostPage(),
+    const PostSnapshotPage(),
   ];
 
   @override
@@ -93,21 +94,16 @@ class NavigatorController extends GetxController
       if (Get.context != null) {
         switch (index) {
           case 0:
-            if (!Get.isRegistered<TaskController>()) {
-              Get.lazyPut(() => TaskController());
-            }
+            Get.lazyPut(() => TaskController());
             break;
           case 1:
-            if (!Get.isRegistered<TopicSnapshotController>()) {
-              Get.lazyPut(() => TopicSnapshotController());
-            }
+            Get.lazyPut(() => TopicSnapshotController());
             break;
           case 2:
-            if (!Get.isRegistered<ChatController>()) {
-              Get.lazyPut(() => ChatController());
-            }
+            Get.lazyPut(() => ChatController());
             break;
           case 3:
+            Get.lazyPut(() => PostSnapshotController());
             break;
           default:
             return;

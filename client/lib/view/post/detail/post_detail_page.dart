@@ -1,5 +1,8 @@
+import 'dart:js_interop';
+
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:my_todo/api/post.dart';
 import 'package:my_todo/component/button/like_button.dart';
 import 'package:my_todo/component/container/empty_container.dart';
 import 'package:my_todo/component/icon.dart';
@@ -27,7 +30,7 @@ class PostDetailPage extends StatefulWidget {
 
 class _PostDetailPageState extends State<PostDetailPage> {
   PostDetailController controller = Get.find<PostDetailController>();
-  bool showReply = false;
+
   int replaySubID = 0;
   Widget todoDivider(BuildContext context) {
     if (Theme.of(context).brightness == Brightness.light) {
@@ -42,6 +45,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
     super.initState();
     todoInputController =
         TodoInputController(TextEditingController(), TextEditingController());
+    Future.delayed(Duration.zero, controller.fetchAll);
   }
 
   @override
@@ -53,7 +57,36 @@ class _PostDetailPageState extends State<PostDetailPage> {
           leading: todoLeadingIconButton(context,
               onPressed: Get.back, icon: Icons.arrow_back_ios),
           actions: [
-            favoriteButton(context, onChange: (v) {}),
+            Row(
+              children: [
+                favoriteButton(context, selected: controller.data.isFavorite,
+                    onChange: (v) {
+                  if (controller.data.isFavorite) {
+                    postUnFavorite(
+                            PostUnFavoriteRequest(id: controller.data.id))
+                        .then((res) {
+                      if (res.success) {
+                        setState(() {
+                          controller.data.isFavorite = false;
+                          controller.data.favoriteCnt--;
+                        });
+                      }
+                    });
+                  } else {
+                    postFavorite(PostFavoriteRequest(id: controller.data.id))
+                        .then((res) {
+                      if (res.success) {
+                        setState(() {
+                          controller.data.isFavorite = true;
+                          controller.data.favoriteCnt++;
+                        });
+                      }
+                    });
+                  }
+                }),
+                Text("${controller.data.favoriteCnt}")
+              ],
+            ),
             const SizedBox(
               width: 10,
             ),
@@ -84,70 +117,29 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 2),
                     child: TodoInput(
-                        showChild: showReply,
+                        showChild: controller.showReply,
                         controller: todoInputController,
                         onTap: (v) {
-                          if (v.isNotEmpty) {
-                            if (controller.selectedComment.isNotEmpty) {
-                              if (replaySubID == 0) {
-                                controller.comments[controller.selectedComment]
-                                    ?.replies
-                                    .add(PostComment(
-                                        content: [v],
-                                        id: "",
-                                        images: [],
-                                        username: "",
-                                        createdAt: DateTime.now(),
-                                        replies: []));
-                                // controller.commentsV1.value[replyID].replies
-                                //     .add(PostComment(
-                                //         content: [v],
-                                //         id: "${controller.commentsV1.value[replyID].replies.length}",
-                                //         images: [],
-                                //         username: "",
-                                //         createdAt: DateTime.now(),
-                                //         replies: []));
-                              } else {
-                                controller.comments[controller.selectedComment]
-                                    ?.replies
-                                    .add(PostComment(
-                                        content: [v],
-                                        id: "",
-                                        images: [],
-                                        username: "",
-                                        createdAt: DateTime.now(),
-                                        replies: []));
-                                // controller.commentsV1.value[replyID].replies
-                                //     .add(PostComment(
-                                //         content: [v],
-                                //         id:
-                                //             "${controller.commentsV1.value[replyID].replies.length}",
-                                //         replyName: controller
-                                //             .commentsV1
-                                //             .value[replyID]
-                                //             .replies[replaySubID]
-                                //             .username,
-                                //         images: [],
-                                //         username: "",
-                                //         createdAt: DateTime.now(),
-                                //         replies: []));
-                              }
-                              replaySubID = 0;
-                              controller.selectedComment = "";
-                              showReply = false;
-                            } else {
-                              controller
-                                      .comments["${Mock.number(max: 10000)}"] =
-                                  PostComment(
-                                      content: [v],
-                                      id: "${Mock.number(max: 10000)}",
-                                      images: [],
-                                      username: "",
-                                      createdAt: DateTime.now(),
-                                      replies: []);
-                            }
-                            setState(() {});
+                          if (v.isEmpty) {
+                            return;
                           }
+                          controller.postMessage(v).then((value) {
+                            setState(() {});
+                          });
+                          // if (controller.isCommentReply()) {
+                          //   if (replaySubID == 0) {
+                          //     controller
+                          //         .comments[controller.selectedComment]?.replies
+                          //         .add(PostComment(
+                          //             content: [v],
+                          //             id: "",
+                          //             images: [],
+                          //             username: "",
+                          //             createdAt: DateTime.now(),
+                          //             replies: []));
+                          //   }
+                          //   replaySubID = 0;
+                          //   controller.freeCommentReply();
                         },
                         child: replyBar()))),
             TodoInputView(
@@ -176,8 +168,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     Row(
                       children: [
                         userProfile(
-                            isMale: controller.isMale,
-                            id: controller.uid),
+                            isMale: controller.data.isMale,
+                            id: controller.data.uid),
                         const SizedBox(
                           width: 10,
                         ),
@@ -185,7 +177,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              controller.username,
+                              controller.data.username,
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -199,7 +191,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                     color:
                                         Theme.of(context).colorScheme.primary),
                                 label: Text(
-                                  "xx省",
+                                  "Unknown",
                                   style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -212,7 +204,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Text(controller.content),
+                    Text(controller.data.content),
                     const SizedBox(height: 15),
                     // ...controller.model.imageUri
                     //     .map((e) => Image.network(e))
@@ -230,11 +222,11 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         child: ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controller.comments.length,
+                          itemCount: controller.comments.value.length,
                           itemBuilder: (BuildContext context, int index) {
                             String key =
-                                controller.comments.keys.elementAt(index);
-                            return commentCard(controller.comments[key]!);
+                                controller.comments.value.keys.elementAt(index);
+                            return commentCard(controller.comments.value[key]!);
                           },
                           separatorBuilder: (BuildContext context, int index) {
                             return todoDivider(context);
@@ -303,8 +295,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                     if (!isParent) {
                                       replaySubID = model.uid;
                                     }
-                                    controller.selectedComment = parent;
-                                    showReply = true;
+                                    controller.setCommentReply(parent);
                                   });
                                 },
                                 icon: Icon(
@@ -488,7 +479,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         children: [
                           Text(model.username),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                controller.handleComment(context);
+                              },
                               icon: Icon(
                                 Icons.more_horiz,
                                 color: Theme.of(context).colorScheme.onPrimary,
@@ -507,8 +500,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                               IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      controller.selectedComment = model.id;
-                                      showReply = true;
+                                      controller.setCommentReply(model.id);
                                     });
                                   },
                                   icon: Icon(
@@ -525,7 +517,34 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           ),
                           Row(
                             children: [
-                              favoriteButton(context, onChange: (v) {}),
+                              favoriteButton(context,
+                                  selected: model.youFavorite, onChange: (v) {
+                                if (model.youFavorite) {
+                                  postCommentUnFavorite(
+                                          PostCommentUnFavoriteRequest(
+                                              id: model.id))
+                                      .then((res) {
+                                    if (res.success) {
+                                      setState(() {
+                                        model.youFavorite = false;
+                                        model.favorite--;
+                                      });
+                                    }
+                                  });
+                                } else {
+                                  postCommentFavorite(
+                                          PostCommentFavoriteRequest(
+                                              id: model.id))
+                                      .then((res) {
+                                    if (res.success) {
+                                      setState(() {
+                                        model.youFavorite = true;
+                                        model.favorite++;
+                                      });
+                                    }
+                                  });
+                                }
+                              }),
                               Text(
                                 "${model.favorite}",
                                 style: TextStyle(
@@ -571,7 +590,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    showReply = false;
+                    controller.freeCommentReply();
                   });
                 },
                 icon: const Icon(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_todo/api/post.dart';
 import 'package:my_todo/component/button/like_button.dart';
 import 'package:my_todo/router/provider.dart';
+import 'package:my_todo/utils/guard.dart';
 import 'package:my_todo/utils/share.dart';
 import 'package:my_todo/view/post/component/profile.dart';
 import 'package:my_todo/view/post/detail/post_detail_controller.dart';
@@ -11,9 +13,10 @@ import 'package:get/get.dart';
 import 'images_shower.dart';
 
 class PostCard extends StatefulWidget {
-  final GetPostVo model;
+  final PostDetailModel model;
+  final VoidCallback more;
 
-  const PostCard({super.key, required this.model});
+  const PostCard({super.key, required this.model, required this.more});
 
   @override
   State<StatefulWidget> createState() => _PostCardState();
@@ -38,36 +41,40 @@ class _PostCardState extends State<PostCard> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.model.username,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                        RawChip(
-                            backgroundColor:
-                                Theme.of(context).primaryColorLight,
-                            materialTapTargetSize: MaterialTapTargetSize.padded,
-                            avatar: Icon(
-                              Icons.location_on,
-                              size: 20,
-                              color: Theme.of(context).colorScheme.primary,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.model.username,
+                            style: const TextStyle(
+                              fontSize: 16,
                             ),
-                            label: Text(
-                              "xx省",
-                              style: TextStyle(
+                          ),
+                          RawChip(
+                              backgroundColor:
+                                  Theme.of(context).primaryColorLight,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.padded,
+                              avatar: Icon(
+                                Icons.location_on,
+                                size: 18,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                            ))
-                      ],
+                              label: Text(
+                                "Unknown",
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ))
+                        ],
+                      ),
                     ),
                   ],
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: widget.more,
                     icon: Icon(
                       Icons.more_horiz,
                       color: Theme.of(context).colorScheme.onPrimary,
@@ -118,13 +125,30 @@ class _PostCardState extends State<PostCard> {
                 ),
                 Row(
                   children: [
-                    favoriteButton(context, onChange: (v) {
-                      if (v) {
-                        widget.model.favoriteCnt++;
+                    favoriteButton(context, selected: widget.model.isFavorite,
+                        onChange: (v) {
+                      if (widget.model.isFavorite) {
+                        postUnFavorite(
+                                PostUnFavoriteRequest(id: widget.model.id))
+                            .then((res) {
+                          if (res.success) {
+                            setState(() {
+                              widget.model.favoriteCnt--;
+                              widget.model.isFavorite = false;
+                            });
+                          }
+                        });
                       } else {
-                        widget.model.favoriteCnt--;
+                        postFavorite(PostFavoriteRequest(id: widget.model.id))
+                            .then((res) {
+                          if (res.success) {
+                            setState(() {
+                              widget.model.favoriteCnt++;
+                              widget.model.isFavorite = true;
+                            });
+                          }
+                        });
                       }
-                      setState(() {});
                     }),
                     Text("${widget.model.favoriteCnt}")
                   ],
@@ -134,7 +158,7 @@ class _PostCardState extends State<PostCard> {
                     IconButton(
                         onPressed: () {
                           TodoShare.shareUri(context,
-                              Uri.parse("/post?id=${widget.model.id}"));
+                              Uri.parse("${Guard.server}/post?id=${widget.model.id}"));
                         },
                         icon: Icon(
                           Icons.open_in_new,
