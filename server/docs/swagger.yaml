@@ -818,6 +818,11 @@ paths:
         name: id
         required: true
         type: integer
+      - description: user jwt
+        in: header
+        name: x-token
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -1009,6 +1014,28 @@ paths:
           schema:
             type: string
       summary: Get Task
+      tags:
+      - Task
+  /task/image/{id}:
+    get:
+      description: get task image
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get task image
+      tags:
+      - Task
+  /task/locate/{id}:
+    get:
+      description: get task image of location
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get task image of location
       tags:
       - Task
   /task/perm_check:

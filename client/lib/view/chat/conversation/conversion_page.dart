@@ -60,7 +60,7 @@ class _ConversationState extends State<Conversation> {
                   onLoad: () {},
                   child: EmptyContainer(
                       icon: Icons.chat,
-                      desc: 'try to send the first message',
+                      desc: 'try_post_message'.tr,
                       what: '',
                       render: controller.chats.value.isNotEmpty,
                       child: Obx(() => ListView.separated(
@@ -137,9 +137,9 @@ class _ConversationState extends State<Conversation> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Text("回复  "),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Text("${"reply".tr}  "),
                                 ),
                                 IconButton(
                                     onPressed: () {
@@ -198,9 +198,9 @@ class _ConversationState extends State<Conversation> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  "Online",
-                  style: TextStyle(
+                Text(
+                  "online".tr,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 11,
                   ),

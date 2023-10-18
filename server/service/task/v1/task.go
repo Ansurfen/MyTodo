@@ -100,7 +100,10 @@ func GetTask(ctx starter.TodoContext, req api.TaskGetRequest) (interfaces.Respon
 // @Success 200 {string} Success
 // @failure 200 {object} string
 // @Router /task/commit [post]
-func CommitTask(ctx starter.TodoContext, req api.TaskCommitRequest) (interfaces.Response, error) {
+func CommitTask(
+	ctx starter.TodoContext,
+	req api.TaskCommitRequest) (
+	interfaces.Response, error) {
 	uc, err := userController.Get(ctx)
 	if err != nil {
 		return api.TaskCommitResponse{}, err
@@ -125,12 +128,15 @@ func CommitTask(ctx starter.TodoContext, req api.TaskCommitRequest) (interfaces.
 			}
 			files = append(files, filename)
 		}
-		taskController.Get(ctx).CreateCommit(int(uc.User.ID), req.TID, req.Type, strings.Join(files, ","))
+		err = taskController.Get(ctx).CreateCommit(int(uc.User.ID), req.TID, req.Type, strings.Join(files, ","))
+		if err != nil {
+			return ctx.ThrowWithResult(err)
+		}
 	case po.COND_IMAGE:
 		files := []string{}
 		for _, img := range req.Files {
 			filename := utils.RandString(8)
-			err = ctx.Context().SaveUploadedFile(img, filepath.Join("./assets/task/file", filename+".png"))
+			err = ctx.Context().SaveUploadedFile(img, fmt.Sprintf(TaskFilePath, filename))
 			if err != nil {
 				return api.TaskCommitResponse{}, err
 			}
@@ -155,13 +161,13 @@ func CommitTask(ctx starter.TodoContext, req api.TaskCommitRequest) (interfaces.
 			return api.TaskCommitResponse{}, nil
 		}
 		return api.TaskCommitResponse{
-			Param: "二维码已过期",
+			Param: "QR timeout",
 		}, nil
 	case po.COND_LOCATE:
 		res := strings.SplitN(req.Param, "---", 2)
 		if len(res) == 2 {
 			id := utils.RandString(8)
-			err := utils.Base64ToFile(res[1][len("data:image/png;base64,"):], filepath.Join("./assets/task", id+".png"))
+			err := utils.Base64ToFile(res[1][len("data:image/png;base64,"):], fmt.Sprintf(TaskPath, id))
 			if err != nil {
 				return api.TaskCommitResponse{}, err
 			}
@@ -193,15 +199,56 @@ const SQL_HasPerm = `SELECT EXISTS (
 // @Success 200 {string} Success
 // @failure 200 {object} string
 // @Router /task/perm_check [post]
-func TaskHasPerm(ctx starter.TodoContext, req api.TaskHasPermRequest) (interfaces.Response, error) {
+func TaskHasPerm(
+	ctx starter.TodoContext,
+	req api.TaskHasPermRequest) (
+	interfaces.Response, error) {
 	uc, err := userController.Get(ctx)
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
 	res := api.TaskHasPermResposne{}
-	return res, db.SQL().RawExec(SQL_HasPerm, uc.User.ID, req.TID).Scan(&res).Error
+	err = db.SQL().Table("task").
+		Select("EXISTS (SELECT 1 FROM task t JOIN topic tp ON t.tt_id = tp.id WHERE tp.creator = ? AND t.id = ?) AS is_admin", uc.User.ID, req.TID).
+		Scan(&res).Error
+	if err != nil {
+		return ctx.ThrowWithResult(err)
+	}
+	return res, nil
+	// return res, db.SQL().RawExec(SQL_HasPerm, uc.User.ID, req.TID).Scan(&res).Error
 }
 
 func StatisticTask(ctx starter.TodoContext) {}
 
 func CommitListTask(ctx starter.TodoContext) {}
+
+const (
+	TaskFilePath = "./assets/task/file/%s.png"
+	TaskPath     = "./assets/task/%s.png"
+)
+
+// @Summary Get task image
+// @Description get task image
+// @Tags Task
+// @Success 200 {string} Success
+// @failure 200 {object} string
+// @Router /task/image/{id} [get]
+func TaskImage(ctx starter.TodoContext) {
+	id := ctx.Context().Param("id")
+	if len(id) > 0 {
+		ctx.Context().File(fmt.Sprintf(TaskFilePath, id))
+	}
+}
+
+// @Summary Get task image of location
+// @Description get task image of location
+// @Tags Task
+// @Success 200 {string} Success
+// @failure 200 {object} string
+// @Router /task/locate/{id} [get]
+func TaskLocateImage(ctx starter.TodoContext) {
+	id := ctx.Context().Param("id")
+	if len(id) > 0 {
+		ctx.Context().File(fmt.Sprintf(TaskPath, id))
+	}
+}

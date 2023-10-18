@@ -19,8 +19,8 @@ Future<Widget> myTodo() async {
   await Future.wait([
     DBProvider.init(),
     NotifyProvider.init(),
+    Future(() => ThemeProvider.init()),
   ]);
-  ThemeProvider.init();
 
   return OKToast(
       child: GetMaterialApp(

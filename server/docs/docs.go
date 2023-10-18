@@ -1138,6 +1138,13 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "user jwt",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1416,6 +1423,40 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/image/{id}": {
+            "get": {
+                "description": "get task image",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get task image",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/locate/{id}": {
+            "get": {
+                "description": "get task image of location",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get task image of location",
                 "responses": {
                     "200": {
                         "description": "OK",

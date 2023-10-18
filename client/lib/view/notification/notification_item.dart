@@ -26,7 +26,6 @@ class _NotificationItemState extends State<NotificationItem> {
   @override
   void initState() {
     super.initState();
-    List<Widget> columns = [];
     switch (NotifyType.getType(widget.data.type)) {
       case NotifyType.unknown:
         typeText = "unknown_notify".tr;
@@ -51,7 +50,7 @@ class _NotificationItemState extends State<NotificationItem> {
                               color: Theme.of(context)
                                   .primaryColor
                                   .withOpacity(0.8)))),
-                  Text("请求添加你为好友".tr)
+                  Text("friend_request".tr)
                 ]),
                 onCancel: Get.back, onConfirm: () {
               if (widget.data.status != NotifyStatus.confirm.index) {
@@ -112,10 +111,10 @@ class _NotificationItemState extends State<NotificationItem> {
               ),
             ),
           ),
-          title: Text(
+          title: const Text(
             "",
             maxLines: 1,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),

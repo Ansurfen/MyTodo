@@ -136,5 +136,8 @@ Map<String, String> get enUS => {
       'unknown_notify': 'Unknown Notify',
       'invite_notify': 'Invite Notify',
       'application_notify': 'Application Notify',
-      'general_notify': 'General Notify'
+      'general_notify': 'General Notify',
+      'try_post_message': 'Try to send the first message',
+      'online': 'Online',
+      'friend_request': 'Want to make friend with you'
     };
