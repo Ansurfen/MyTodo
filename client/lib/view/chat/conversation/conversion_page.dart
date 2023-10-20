@@ -55,62 +55,25 @@ class _ConversationState extends State<Conversation> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(
-              child: refreshContainer(
+              child: Obx(() => refreshContainer(
                   context: context,
-                  onLoad: () {},
+                  onLoad: controller.requestHistory,
                   child: EmptyContainer(
                       icon: Icons.chat,
                       desc: 'try_post_message'.tr,
                       what: '',
                       render: controller.chats.value.isNotEmpty,
-                      child: Obx(() => ListView.separated(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            itemCount: controller.chats.value.length,
-                            reverse: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              Chat chat = controller.chats.value[index];
-                              return GestureDetector(
-                                  onLongPressMoveUpdate: (details) async {
-                                    final overlay = Overlay.of(context)
-                                        .context
-                                        .findRenderObject() as RenderBox;
-                                    final menuItem = await showMenu<int>(
-                                        context: context,
-                                        items: [
-                                          PopupMenuItem(
-                                              value: 1, child: Text('copy'.tr)),
-                                          PopupMenuItem(
-                                              value: 2,
-                                              child: Text('reply'.tr)),
-                                        ],
-                                        position: RelativeRect.fromSize(
-                                            details.globalPosition &
-                                                const Size(48.0, 48.0),
-                                            overlay.size));
-                                    // Check if menu item clicked
-                                    if (context.mounted) {
-                                      switch (menuItem) {
-                                        case 1:
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
-                                            content: Text('Copy clicked'),
-                                            behavior: SnackBarBehavior.floating,
-                                          ));
-                                          break;
-                                        case 2:
-                                          show.value = true;
-                                          replyID = chats[index].id;
-                                          break;
-                                        default:
-                                      }
-                                    }
-                                  },
-                                  child: ChatContainer(data: chat));
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const SizedBox(height: 15),
-                          )))),
+                      child: ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        itemCount: controller.chats.value.length,
+                        reverse: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          Chat chat = controller.chats.value[index];
+                          return reactiveChatBubble(chat);
+                        },
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const SizedBox(height: 15),
+                      )))),
             ),
             Container(
                 decoration: BoxDecoration(
@@ -160,11 +123,11 @@ class _ConversationState extends State<Conversation> {
                             msg.reply = replyID;
                             replyID = "0";
                           }
-                          controller.sendMessage(msg);
-                          if (show.value) {
-                            show.value = false;
-                          }
-                          setState(() {});
+                          controller.sendMessage(msg).then((_) {
+                            if (show.value) {
+                              show.value = false;
+                            }
+                          });
                         })))),
             TodoInputView(
                 controller: todoInputController,
@@ -174,6 +137,40 @@ class _ConversationState extends State<Conversation> {
         );
       }),
     );
+  }
+
+  Widget reactiveChatBubble(Chat data) {
+    return GestureDetector(
+        onLongPressMoveUpdate: (details) async {
+          final overlay =
+              Overlay.of(context).context.findRenderObject() as RenderBox;
+          final menuItem = await showMenu<int>(
+              context: context,
+              items: [
+                PopupMenuItem(value: 1, child: Text('copy'.tr)),
+                PopupMenuItem(value: 2, child: Text('reply'.tr)),
+              ],
+              position: RelativeRect.fromSize(
+                  details.globalPosition & const Size(48.0, 48.0),
+                  overlay.size));
+          // Check if menu item clicked
+          if (context.mounted) {
+            switch (menuItem) {
+              case 1:
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Copy clicked'),
+                  behavior: SnackBarBehavior.floating,
+                ));
+                break;
+              case 2:
+                show.value = true;
+                replyID = data.id;
+                break;
+              default:
+            }
+          }
+        },
+        child: ChatContainer(data: data));
   }
 
   Widget userProfile() {

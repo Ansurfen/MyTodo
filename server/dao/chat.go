@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Chat struct {
@@ -41,8 +42,9 @@ func (c *Chat) Find(from, to int, page *Pagination[po.Chat]) error {
 			{"to": from},
 			{"deleted_at": bson.M{"$eq": time.Time{}}}}},
 	}}
+	sortOptions := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}})
 	col := c.Collection()
-	cur, err := col.Find(context.Background(), filter, page.MongoFindOption())
+	cur, err := col.Find(context.Background(), filter, sortOptions, page.MongoFindOption())
 	if err != nil {
 		return err
 	}

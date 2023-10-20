@@ -51,7 +51,7 @@ func (r *NotificationRoute) InstallNotificationRoute(g *starter.MyTodoServerGrou
 		notifyRouter.POST("/pub/add",
 			middleware.PromCount(prometheus.CounterOpts{
 				Namespace: "notify",
-				Name:      "pub add",
+				Name:      "pub_add",
 				Help:      "counts view count",
 			}),
 			middleware.AuthJWT,
@@ -60,7 +60,7 @@ func (r *NotificationRoute) InstallNotificationRoute(g *starter.MyTodoServerGrou
 		notifyRouter.POST("/pub/del",
 			middleware.PromCount(prometheus.CounterOpts{
 				Namespace: "notify",
-				Name:      "pub del",
+				Name:      "pub_del",
 				Help:      "counts view count",
 			}),
 			middleware.AuthJWT,
@@ -69,7 +69,7 @@ func (r *NotificationRoute) InstallNotificationRoute(g *starter.MyTodoServerGrou
 		notifyRouter.GET("/pub/get",
 			middleware.PromCount(prometheus.CounterOpts{
 				Namespace: "notify",
-				Name:      "pub get",
+				Name:      "pub_get",
 				Help:      "counts view count",
 			}),
 			middleware.AuthJWT,
@@ -78,7 +78,7 @@ func (r *NotificationRoute) InstallNotificationRoute(g *starter.MyTodoServerGrou
 		notifyRouter.POST("/action/add",
 			middleware.PromCount(prometheus.CounterOpts{
 				Namespace: "notify",
-				Name:      "action add",
+				Name:      "action_add",
 				Help:      "counts view count",
 			}),
 			middleware.AuthJWT,
@@ -87,7 +87,7 @@ func (r *NotificationRoute) InstallNotificationRoute(g *starter.MyTodoServerGrou
 		notifyRouter.POST("/action/del",
 			middleware.PromCount(prometheus.CounterOpts{
 				Namespace: "notify",
-				Name:      "action del",
+				Name:      "action_del",
 				Help:      "counts view count",
 			}),
 			middleware.AuthJWT,
@@ -96,7 +96,7 @@ func (r *NotificationRoute) InstallNotificationRoute(g *starter.MyTodoServerGrou
 		notifyRouter.POST("/action/get",
 			middleware.PromCount(prometheus.CounterOpts{
 				Namespace: "notify",
-				Name:      "action get",
+				Name:      "action_get",
 				Help:      "counts view count",
 			}),
 			middleware.AuthJWT,
@@ -105,7 +105,7 @@ func (r *NotificationRoute) InstallNotificationRoute(g *starter.MyTodoServerGrou
 		notifyRouter.POST("/action/commit",
 			middleware.PromCount(prometheus.CounterOpts{
 				Namespace: "notify",
-				Name:      "action commit",
+				Name:      "action_commit",
 				Help:      "counts view count",
 			}),
 			middleware.AuthJWT,

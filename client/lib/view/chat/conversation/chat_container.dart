@@ -4,6 +4,7 @@ import 'package:my_todo/router/provider.dart';
 import 'package:my_todo/theme/color.dart';
 import 'package:my_todo/theme/provider.dart';
 import 'package:my_todo/utils/guard.dart';
+import 'package:my_todo/utils/time.dart';
 import 'package:video_player/video_player.dart';
 
 class ChatContainer extends StatefulWidget {
@@ -38,6 +39,7 @@ class _ChatContainerState extends State<ChatContainer> {
 
   @override
   Widget build(BuildContext context) {
+    children.clear();
     isMe = widget.data.from == Guard.user;
     for (var e in widget.data.content) {
       if (e.length > 4) {
@@ -69,8 +71,8 @@ class _ChatContainerState extends State<ChatContainer> {
             ));
           case 3: // video
             videoPlayerController =
-            VideoPlayerController.networkUrl(Uri.parse(e.substring(4)))
-              ..initialize();
+                VideoPlayerController.networkUrl(Uri.parse(e.substring(4)))
+                  ..initialize();
             children.add(Align(
               alignment: Alignment.centerRight,
               child: Container(
@@ -140,7 +142,9 @@ class _ChatContainerState extends State<ChatContainer> {
               ? const EdgeInsets.only(right: 10, bottom: 10.0)
               : const EdgeInsets.only(left: 10, bottom: 10.0),
           child: Text(
-            widget.data.time != null ? widget.data.time.toString() : "",
+            widget.data.time != null
+                ? formatTimeDifference(widget.data.time!)
+                : "",
             style: TextStyle(
               color: Theme.of(context).textTheme.titleLarge?.color,
               fontSize: 10.0,

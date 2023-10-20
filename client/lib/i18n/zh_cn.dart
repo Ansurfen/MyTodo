@@ -166,5 +166,6 @@ Map<String, String> get zhCN => {
       'general_notify': '常规通知',
       'try_post_message': '尝试发送第一条消息',
       'online': '在线',
-      'friend_request': '请求添加你为好友'
+      'friend_request': '请求添加你为好友',
+      'no_more': '没有更多了'
     };

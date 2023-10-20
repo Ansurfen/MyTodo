@@ -72,17 +72,17 @@ func (c *PostController) GetPostV2(uid, page, count int) (ret []bo.SnapshotPost,
 		count = 0
 	}
 
-	err = db.SQL().Table("post").
-		Select("post.id, post.created_at, post.content, post.image, user.id AS uid, user.is_male, user.name AS username, COUNT(DISTINCT post_favorite.id) AS favoriteCnt, CASE WHEN EXISTS (SELECT 1 FROM post_favorite WHERE pid = post.id AND uid = ? AND deleted_at IS NULL) THEN TRUE ELSE FALSE END AS is_favorite", uid).
-		Joins("LEFT JOIN user ON post.uid = user.id").
-		Joins("LEFT JOIN post_favorite ON post.id = post_favorite.pid").
-		Where("post.deleted_at IS NULL").
-		Group("post.id").
-		Order("post.created_at DESC").
-		Limit(count).
-		Offset((page - 1) * 10).
-		Find(&ret).Error
-	// err = db.SQL().Raw(fmt.Sprintf(SQLDetailedPostV2, uid, count, (page-1)*10)).Scan(&ret).Error
+	// err = db.SQL().Table("post").
+	// 	Select("post.id, post.created_at, post.content, post.image, user.id AS uid, user.is_male, user.name AS username, COUNT(DISTINCT post_favorite.id) AS favoriteCnt, CASE WHEN EXISTS (SELECT 1 FROM post_favorite WHERE pid = post.id AND uid = ? AND deleted_at IS NULL) THEN TRUE ELSE FALSE END AS is_favorite", uid).
+	// 	Joins("LEFT JOIN user ON post.uid = user.id").
+	// 	Joins("LEFT JOIN post_favorite ON post.id = post_favorite.pid").
+	// 	Where("post.deleted_at IS NULL").
+	// 	Group("post.id").
+	// 	Order("post.created_at DESC").
+	// 	Limit(count).
+	// 	Offset((page - 1) * 10).
+	// 	Find(&ret).Error
+	err = db.SQL().Raw(fmt.Sprintf(SQLDetailedPostV2, uid, count, (page-1)*10)).Scan(&ret).Error
 	if err != nil {
 		return
 	}
@@ -154,12 +154,12 @@ func (c *PostController) GetPostCommentFavoriteCount(cids []string) (res []po.De
 	for _, c := range cids {
 		cidf = append(cidf, fmt.Sprintf(`'%s'`, c))
 	}
-	err = db.SQL().Table("post_comment_favorite").
-		Select("cid, COUNT(*) AS count").
-		Where("cid IN (?)", strings.Join(cidf, ",")).
-		Group("cid").
-		Find(&res).Error
-	// err = db.SQL().RawExec(SQLBatchCommentFavoriteCount, strings.Join(cidf, ",")).Scan(&res).Error
+	// err = db.SQL().Table("post_comment_favorite").
+	// 	Select("cid, COUNT(*) AS count").
+	// 	Where("cid IN (?)", strings.Join(cidf, ",")).
+	// 	Group("cid").
+	// 	Find(&res).Error
+	err = db.SQL().RawExec(SQLBatchCommentFavoriteCount, strings.Join(cidf, ",")).Scan(&res).Error
 	return
 }
 
@@ -174,12 +174,12 @@ WHERE p.id = %d
 GROUP BY u.name, p.uid;`
 
 func (c *PostController) GetPostDetail(uid, id int) (res po.DetailedPost, err error) {
-	// err = db.SQL().RawExec(SQLGetPostDetail, uid, id).Scan(&res).Error
-	db.SQL().Select("user.is_male AS isMale, user.name AS username, post.id, post.uid, post.content, post.image, COUNT(post_favorite.id) AS favorite_count, CASE WHEN EXISTS (SELECT 1 FROM post_favorite WHERE pid = post.id AND uid = ? AND deleted_at IS NULL) THEN TRUE ELSE FALSE END AS is_favorite", uid).
-		Joins("JOIN user ON post.uid = user.id").
-		Joins("LEFT JOIN post_favorite ON post.id = post_favorite.pid").
-		Where("post.id = ?", id).
-		Group("user.name, post.uid").
-		First(&res)
+	err = db.SQL().RawExec(SQLGetPostDetail, uid, id).Scan(&res).Error
+	// err = db.SQL().Table("post").Select("user.is_male AS isMale, user.name AS username, post.id, post.uid, post.content, post.image, COUNT(post_favorite.id) AS favorite_count, CASE WHEN EXISTS (SELECT 1 FROM post_favorite WHERE pid = post.id AND uid = ? AND deleted_at IS NULL) THEN TRUE ELSE FALSE END AS is_favorite", uid).
+	// 	Joins("JOIN user ON post.uid = user.id").
+	// 	Joins("LEFT JOIN post_favorite ON post.id = post_favorite.pid").
+	// 	Where("post.id = ?", id).
+	// 	Group("user.name, post.uid").
+	// 	First(&res).Error
 	return
 }

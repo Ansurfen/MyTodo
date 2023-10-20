@@ -78,9 +78,11 @@ class GetChatResponse extends BaseResponse {
   GetChatResponse() : super({});
 
   GetChatResponse.fromResponse(Response res) : super(res.data) {
-    chats = (res.data["data"]["chats"] as List)
-        .map((e) => Chat.fromJson(e))
-        .toList();
+    if (res.data["data"]["chats"] != null) {
+      chats = (res.data["data"]["chats"] as List)
+          .map((e) => Chat.fromJson(e))
+          .toList();
+    }
   }
 }
 

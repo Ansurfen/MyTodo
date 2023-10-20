@@ -139,5 +139,6 @@ Map<String, String> get enUS => {
       'general_notify': 'General Notify',
       'try_post_message': 'Try to send the first message',
       'online': 'Online',
-      'friend_request': 'Want to make friend with you'
+      'friend_request': 'Want to make friend with you',
+      'no_more': 'No more'
     };

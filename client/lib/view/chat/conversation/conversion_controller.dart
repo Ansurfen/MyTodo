@@ -9,7 +9,7 @@ import 'package:my_todo/utils/guard.dart';
 class ConversionController extends GetxController {
   User user = User(0, "", "");
   Rx<List<Chat>> chats = Rx([]);
-  int page = 1;
+  int page = 0;
 
   @override
   void onInit() {
@@ -19,23 +19,46 @@ class ConversionController extends GetxController {
     } else {
       userInfo(int.parse(Get.parameters["id"]!)).then((res) {
         user = res;
-        fetch().then((res) {
+        fetchChats().then((res) {
           chats.value = res.chats;
         });
       });
     }
   }
 
-  Future<GetChatResponse> fetch() {
-    return getChat(
-        GetChatRequest(from: Guard.user, to: user.id, page: 2, pageSize: 10));
+  Future<GetChatResponse> fetchChats() {
+    page++;
+    return getChat(GetChatRequest(
+        from: Guard.user, to: user.id, page: page, pageSize: 10));
   }
 
-  void sendMessage(Chat msg) {
+  Future sendMessage(Chat msg) {
     msg.from = Guard.user;
     msg.to = user.id;
-    addChat(AddChatRequest(msg)).then((value) {}).onError((error, stackTrace) {
+    return addChat(AddChatRequest(msg)).then((_) {
+      for (String e in msg.content) {
+        msg.content = ["0001$e"];
+      }
+      msg.time = DateTime.now();
+      chats.value.insert(0, msg);
+      chats.refresh();
+    }).onError((error, stackTrace) {
       showError(error.toString());
+    });
+  }
+
+  Future requestHistory() {
+    page++;
+    return getChat(GetChatRequest(
+            from: Guard.user, to: user.id, page: page, pageSize: 10))
+        .then((res) {
+      if (res.chats.isNotEmpty) {
+        chats.value.addAll(res.chats);
+        chats.refresh();
+      } else {
+        page--;
+        showError("no_more".tr);
+      }
     });
   }
 }

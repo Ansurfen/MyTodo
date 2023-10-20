@@ -43,7 +43,7 @@ func (r *TaskRoute) InstallTaskRoute(g *starter.MyTodoServerGroup) {
 		taskRouter.POST("/commit",
 			middleware.PromCount(prometheus.CounterOpts{
 				Namespace: "task",
-				Name:      "add",
+				Name:      "commit",
 				Help:      "counts view count",
 			}),
 			middleware.AuthJWT,
