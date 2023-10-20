@@ -44,5 +44,14 @@ func (r *ChatRoute) InstallChatRoutes(g *starter.MyTodoServerGroup) {
 				Help:      "counts view count",
 			}),
 			starter.BindRequest(service.Friend))
+
+		chatRouter.GET("/snap",
+			middleware.PromCount(prometheus.CounterOpts{
+				Namespace: "chat",
+				Name:      "snapshot",
+				Help:      "counts view count",
+			}),
+			middleware.AuthJWT,
+			starter.BindRequest(service.Snapshot))
 	}
 }

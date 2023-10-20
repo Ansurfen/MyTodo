@@ -21,6 +21,8 @@ import (
 const (
 	ChatTypeTagText = "0001"
 	ChatTypeTagFile = "0002"
+
+	ChatFileImagePath = "chat:/user/%s%s"
 )
 
 // @Summary Add Chat
@@ -41,7 +43,7 @@ func AddChat(
 	interfaces.Response, error) {
 	contents := []string{}
 	for _, file := range req.Files {
-		filename := fmt.Sprintf("chat:/user/%s%s", utils.RandString(16), filepath.Ext(file.Filename))
+		filename := fmt.Sprintf(ChatFileImagePath, utils.RandString(16), filepath.Ext(file.Filename))
 		contents = append(contents, ChatTypeTagFile+filename)
 		if err := ctx.SaveUploadFile(file, filename); err != nil {
 			return ctx.ThrowWithResult(err)
@@ -136,4 +138,23 @@ func Friend(
 	return api.ChatFriendResponse{
 		Friends: uc.DetailedFriends(),
 	}, nil
+}
+
+// @Summary Get snapshot
+// @Description get snapshot
+// @Tags Chat
+// @Param x-token header string true "x-token"
+// @Success 200 {string} Success
+// @failure 200 {object} string
+// @Router /chat/snap [get]
+func Snapshot(
+	ctx starter.TodoContext,
+	req interfaces.EmptyRequest) (
+	interfaces.Response, error) {
+	uc, err := userController.Get(ctx)
+	if err != nil {
+		return ctx.ThrowWithResult(err)
+	}
+	fmt.Println(uc)
+	return nil, nil
 }

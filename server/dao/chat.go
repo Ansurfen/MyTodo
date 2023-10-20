@@ -74,3 +74,7 @@ func (c *Chat) Find(from, to int, page *Pagination[po.Chat]) error {
 	}
 	return nil
 }
+
+func (c *Chat) Snapshot(from, to int) error {
+	return nil
+}

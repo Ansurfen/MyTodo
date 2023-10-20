@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:my_todo/api/chat.dart';
 import 'package:my_todo/api/user.dart';
+import 'package:my_todo/component/input.dart';
 import 'package:my_todo/model/entity/chat.dart';
 import 'package:my_todo/model/entity/user.dart';
 import 'package:my_todo/utils/dialog.dart';
@@ -10,6 +12,10 @@ class ConversionController extends GetxController {
   User user = User(0, "", "");
   Rx<List<Chat>> chats = Rx([]);
   int page = 0;
+  Rx<bool> show = false.obs;
+  String replyID = '';
+  TodoInputController todoInputController =
+      TodoInputController(TextEditingController(), TextEditingController());
 
   @override
   void onInit() {
@@ -26,16 +32,28 @@ class ConversionController extends GetxController {
     }
   }
 
+  @override
+  void dispose() {
+    todoInputController.dispose();
+    super.dispose();
+  }
+
   Future<GetChatResponse> fetchChats() {
     page++;
     return getChat(GetChatRequest(
         from: Guard.user, to: user.id, page: page, pageSize: 10));
   }
 
-  Future sendMessage(Chat msg) {
-    msg.from = Guard.user;
-    msg.to = user.id;
+  Future sendMessage(String v) {
+    Chat msg = Chat(from: Guard.user, to: user.id, content: [v]);
+    if (show.value) {
+      msg.reply = replyID;
+      replyID = "0";
+    }
     return addChat(AddChatRequest(msg)).then((_) {
+      if (show.value) {
+        show.value = false;
+      }
       for (String e in msg.content) {
         msg.content = ["0001$e"];
       }

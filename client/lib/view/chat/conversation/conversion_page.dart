@@ -10,7 +10,6 @@ import 'package:my_todo/component/scaffold.dart';
 import 'package:my_todo/model/entity/chat.dart';
 import 'package:my_todo/router/provider.dart';
 import 'package:my_todo/theme/provider.dart';
-import 'package:my_todo/utils/guard.dart';
 import 'package:my_todo/view/chat/conversation/chat_container.dart';
 import 'package:my_todo/view/chat/conversation/conversion_controller.dart';
 import 'package:my_todo/theme/color.dart';
@@ -23,23 +22,12 @@ class Conversation extends StatefulWidget {
 }
 
 class _ConversationState extends State<Conversation> {
-  List conversation = [];
-  List<Chat> chats = [];
-  TodoInputController todoInputController =
-      TodoInputController(TextEditingController(), TextEditingController());
   ConversionController controller = Get.find<ConversionController>();
-  Rx<bool> show = false.obs;
-  String replyID = '';
-  @override
-  void dispose() {
-    todoInputController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final key = GlobalKey<EmojiPickerState>();
-    todoInputController.defaultConfig(context);
+    controller.todoInputController.defaultConfig(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: todoAppBar(
@@ -75,68 +63,58 @@ class _ConversationState extends State<Conversation> {
                             const SizedBox(height: 15),
                       )))),
             ),
-            Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                        color: ThemeProvider.contrastColor(context,
-                            light: HexColor.fromInt(0xceced2),
-                            dark: Colors.grey.withOpacity(0.8)),
-                        width: 1),
-                  ),
-                ),
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: Obx(() => TodoInput(
-                        showChild: show.value,
-                        controller: todoInputController,
-                        child: Container(
-                            decoration: BoxDecoration(
-                                color: ThemeProvider.contrastColor(context,
-                                    light: Colors.grey.withOpacity(0.2),
-                                    dark: Colors.black.withOpacity(0.2)),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(8.0))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Text("${"reply".tr}  "),
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      show.value = false;
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      size: 18,
-                                    ))
-                              ],
-                            )),
-                        onTap: (v) {
-                          Chat msg = Chat(
-                              from: Guard.user,
-                              to: controller.user.id,
-                              content: [v]);
-                          if (show.value) {
-                            msg.reply = replyID;
-                            replyID = "0";
-                          }
-                          controller.sendMessage(msg).then((_) {
-                            if (show.value) {
-                              show.value = false;
-                            }
-                          });
-                        })))),
+            userInputBar(),
             TodoInputView(
-                controller: todoInputController,
+                controller: controller.todoInputController,
                 state: key,
                 maxWidth: constraints.maxWidth),
           ],
         );
       }),
     );
+  }
+
+  Widget userInputBar() {
+    return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+                color: ThemeProvider.contrastColor(context,
+                    light: HexColor.fromInt(0xceced2),
+                    dark: Colors.grey.withOpacity(0.8)),
+                width: 1),
+          ),
+        ),
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Obx(() => TodoInput(
+                showChild: controller.show.value,
+                controller: controller.todoInputController,
+                onTap: controller.sendMessage,
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: ThemeProvider.contrastColor(context,
+                            light: Colors.grey.withOpacity(0.2),
+                            dark: Colors.black.withOpacity(0.2)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8.0))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text("${"reply".tr}  "),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              controller.show.value = false;
+                            },
+                            icon: const Icon(
+                              Icons.close,
+                              size: 18,
+                            ))
+                      ],
+                    ))))));
   }
 
   Widget reactiveChatBubble(Chat data) {
@@ -153,7 +131,6 @@ class _ConversationState extends State<Conversation> {
               position: RelativeRect.fromSize(
                   details.globalPosition & const Size(48.0, 48.0),
                   overlay.size));
-          // Check if menu item clicked
           if (context.mounted) {
             switch (menuItem) {
               case 1:
@@ -163,8 +140,8 @@ class _ConversationState extends State<Conversation> {
                 ));
                 break;
               case 2:
-                show.value = true;
-                replyID = data.id;
+                controller.show.value = true;
+                controller.replyID = data.id;
                 break;
               default:
             }

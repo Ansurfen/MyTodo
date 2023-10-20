@@ -37,6 +37,65 @@ class _ChatContainerState extends State<ChatContainer> {
     return Theme.of(context).primaryColor.withOpacity(0.1);
   }
 
+  Widget textSection(String msg) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Text(
+        msg,
+        style: TextStyle(
+          color: isMe
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).textTheme.titleLarge?.color,
+        ),
+      ),
+    );
+  }
+
+  Widget imageSection(String url) {
+    return GestureDetector(
+      onTap: () {
+        RouterProvider.viewPhoto(type: PhotoType.img, url: url);
+      },
+      child: Image(
+        image: NetworkImage(url),
+      ),
+    );
+  }
+
+  Widget videoSection(String url) {
+    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url))
+      ..initialize();
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+          margin: const EdgeInsets.all(3.0),
+          padding: const EdgeInsets.all(5.0),
+          constraints: const BoxConstraints(
+            maxWidth: double.infinity,
+            minWidth: 20.0,
+          ),
+          decoration: BoxDecoration(
+              color: ThemeProvider.contrastColor(context,
+                  light: HexColor.fromInt(0xf5f5f5),
+                  dark: HexColor.fromInt(0x1c1c1e)),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(5.0),
+                bottomLeft: Radius.circular(5.0),
+                bottomRight: Radius.circular(10.0),
+              )),
+          child: SizedBox(
+            width: 200,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: VideoPlayer(videoPlayerController!),
+              ),
+            ),
+          )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     children.clear();
@@ -44,65 +103,19 @@ class _ChatContainerState extends State<ChatContainer> {
     for (var e in widget.data.content) {
       if (e.length > 4) {
         int type = int.parse(e.substring(0, 4));
+        String metadata = e.substring(4);
         switch (type) {
-          case 1: // text
+          case 1:
             children.add(
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: Text(
-                  e.substring(4),
-                  style: TextStyle(
-                    color: isMe
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(context).textTheme.titleLarge?.color,
-                  ),
-                ),
-              ),
+              textSection(metadata),
             );
-          case 2: // image
-            children.add(GestureDetector(
-              onTap: () {
-                RouterProvider.viewPhoto(
-                    type: PhotoType.img, url: e.substring(4));
-              },
-              child: Image(
-                image: NetworkImage(e.substring(4)),
-              ),
-            ));
-          case 3: // video
-            videoPlayerController =
-                VideoPlayerController.networkUrl(Uri.parse(e.substring(4)))
-                  ..initialize();
-            children.add(Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                  margin: const EdgeInsets.all(3.0),
-                  padding: const EdgeInsets.all(5.0),
-                  constraints: const BoxConstraints(
-                    maxWidth: double.infinity,
-                    minWidth: 20.0,
-                  ),
-                  decoration: BoxDecoration(
-                      color: ThemeProvider.contrastColor(context,
-                          light: HexColor.fromInt(0xf5f5f5),
-                          dark: HexColor.fromInt(0x1c1c1e)),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(5.0),
-                        bottomLeft: Radius.circular(5.0),
-                        bottomRight: Radius.circular(10.0),
-                      )),
-                  child: SizedBox(
-                    width: 200,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: VideoPlayer(videoPlayerController!),
-                      ),
-                    ),
-                  )),
-            ));
+          case 2:
+            children.add(imageSection(metadata));
+          case 3:
+            children.add(videoSection(metadata));
         }
+      } else {
+        children.add(textSection(""));
       }
     }
     final align = isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
