@@ -113,14 +113,6 @@ func (c *Chat) Snapshot(uid uint) (map[uint]*bo.Snapshot, error) {
 				data[message.From].LastMsg = message.Content
 			}
 		}
-		var reply po.Chat
-		oid, err := db.Mongo().BindID(message.Reply)
-		if err == nil {
-			err = col.FindOne(context.TODO(), oid).Decode(&reply)
-			if err == nil {
-				fmt.Println(reply)
-			}
-		}
 	}
 	return data, nil
 }
