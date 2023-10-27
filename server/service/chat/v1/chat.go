@@ -8,6 +8,7 @@ import (
 	"MyTodo/engine/v1/db"
 	"MyTodo/engine/v1/starter"
 	interfaces "MyTodo/interface"
+	"MyTodo/model/bo/v1"
 	"MyTodo/model/po/v1"
 	"MyTodo/utils"
 	"MyTodo/utils/vfs"
@@ -155,6 +156,28 @@ func Snapshot(
 	if err != nil {
 		return ctx.ThrowWithResult(err)
 	}
-	fmt.Println(uc)
-	return nil, nil
+	cc := chatController.Get(ctx)
+	var data map[uint]*bo.Snapshot
+	if data, err = cc.ChatDao.Snapshot(uc.User.ID); err != nil {
+		return ctx.ThrowWithResult(err)
+	}
+	res := make([]bo.Snapshot, len(data))
+	i := 0
+	for uid, meta := range data {
+		u, err := uc.FindByID(int(uid))
+		if err != nil {
+			return ctx.ThrowWithResult(err)
+		}
+		res[i] = bo.Snapshot{
+			Count:    meta.Count,
+			LastAt:   meta.LastAt,
+			LastMsg:  meta.LastMsg,
+			Username: u.Name,
+			UID:      int(uid),
+		}
+		i++
+	}
+	return api.ChatSnapshotResponse{
+		Snap: res,
+	}, nil
 }

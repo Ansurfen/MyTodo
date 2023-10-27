@@ -151,6 +151,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/chat/snap": {
+            "get": {
+                "description": "get snapshot",
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Get snapshot",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/event/qr": {
             "get": {
                 "description": "qr event",

@@ -159,6 +159,23 @@ paths:
       summary: Get Chat
       tags:
       - Chat
+  /chat/snap:
+    get:
+      description: get snapshot
+      parameters:
+      - description: x-token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get snapshot
+      tags:
+      - Chat
   /event/qr:
     get:
       consumes:

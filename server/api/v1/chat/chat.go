@@ -2,6 +2,7 @@ package api
 
 import (
 	interfaces "MyTodo/interface"
+	"MyTodo/model/bo/v1"
 	"MyTodo/model/po/v1"
 	"mime/multipart"
 )
@@ -41,4 +42,9 @@ type DelChatResponse struct {
 type ChatFriendResponse struct {
 	interfaces.BaseResponse
 	Friends []po.User `json:"friend"`
+}
+
+type ChatSnapshotResponse struct {
+	interfaces.BaseResponse
+	Snap []bo.Snapshot `json:"snaps"`
 }

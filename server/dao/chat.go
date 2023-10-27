@@ -2,6 +2,7 @@ package dao
 
 import (
 	"MyTodo/engine/v1/db"
+	"MyTodo/model/bo/v1"
 	"MyTodo/model/po/v1"
 	"context"
 	"fmt"
@@ -75,6 +76,51 @@ func (c *Chat) Find(from, to int, page *Pagination[po.Chat]) error {
 	return nil
 }
 
-func (c *Chat) Snapshot(from, to int) error {
-	return nil
+func (c *Chat) Snapshot(uid uint) (map[uint]*bo.Snapshot, error) {
+	filter := bson.M{"$or": []bson.M{
+		{"from": uid},
+		{"to": uid},
+	}}
+	col := c.Collection()
+	cur, err := col.Find(context.Background(), filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(context.Background())
+	data := map[uint]*bo.Snapshot{}
+	for cur.Next(context.Background()) {
+		var message po.Chat
+		err := cur.Decode(&message)
+		if err != nil {
+			return nil, err
+		}
+		if message.From == uid {
+			if data[message.To] == nil {
+				data[message.To] = &bo.Snapshot{}
+			}
+			data[message.To].Count++
+			if data[message.To].LastAt.Before(message.CreatedAt) {
+				data[message.To].LastAt = message.CreatedAt
+				data[message.To].LastMsg = message.Content
+			}
+		} else if message.To == uid {
+			if data[message.From] == nil {
+				data[message.From] = &bo.Snapshot{}
+			}
+			data[message.From].Count++
+			if data[message.From].LastAt.Before(message.CreatedAt) {
+				data[message.From].LastAt = message.CreatedAt
+				data[message.From].LastMsg = message.Content
+			}
+		}
+		var reply po.Chat
+		oid, err := db.Mongo().BindID(message.Reply)
+		if err == nil {
+			err = col.FindOne(context.TODO(), oid).Decode(&reply)
+			if err == nil {
+				fmt.Println(reply)
+			}
+		}
+	}
+	return data, nil
 }
