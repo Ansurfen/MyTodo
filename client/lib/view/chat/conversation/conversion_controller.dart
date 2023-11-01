@@ -20,8 +20,11 @@ class ConversionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    if (Get.arguments != null) {
+    if (Get.arguments != null && Get.arguments is User) {
       user = Get.arguments;
+      fetchChats().then((res) {
+        chats.value = res.chats;
+      });
     } else {
       userInfo(int.parse(Get.parameters["id"]!)).then((res) {
         user = res;

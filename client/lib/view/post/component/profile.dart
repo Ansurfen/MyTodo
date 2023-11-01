@@ -32,7 +32,7 @@ Widget userProfile({required bool isMale, required int id}) {
           radius: 25,
         ),
       ),
-      Positioned(bottom: 0.0, right: 5.0, child: genderBadge(isMale)),
+      Positioned(bottom: 0.0, right: 5.0, child: genderBadge(isMale))
     ],
   );
 }

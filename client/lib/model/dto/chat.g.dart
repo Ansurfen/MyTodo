@@ -1,0 +1,1 @@
+part of 'chat.dart';

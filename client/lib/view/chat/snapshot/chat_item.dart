@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:my_todo/component/image.dart';
+import 'package:my_todo/view/post/component/profile.dart';
 
 Random random = Random();
 List names = [
@@ -34,17 +36,17 @@ List messages = [
 
 List groups = List.generate(
     13,
-        (index) => {
-      "name": "Group ${random.nextInt(20)}",
-      "dp": "assets/images/cm${random.nextInt(10)}.jpeg",
-      "msg": messages[random.nextInt(10)],
-      "counter": random.nextInt(20),
-      "time": "${random.nextInt(50)} min ago",
-      "isOnline": random.nextBool(),
-    });
+    (index) => {
+          "name": "Group ${random.nextInt(20)}",
+          "dp": "assets/images/cm${random.nextInt(10)}.jpeg",
+          "msg": messages[random.nextInt(10)],
+          "counter": random.nextInt(20),
+          "time": "${random.nextInt(50)} min ago",
+          "isOnline": random.nextBool(),
+        });
 
 class ChatItem extends StatefulWidget {
-  final String dp;
+  final int uid;
   final String name;
   final String time;
   final String msg;
@@ -54,7 +56,7 @@ class ChatItem extends StatefulWidget {
 
   const ChatItem({
     super.key,
-    required this.dp,
+    required this.uid,
     required this.name,
     required this.time,
     required this.msg,
@@ -76,8 +78,8 @@ class _ChatItemState extends State<ChatItem> {
         contentPadding: const EdgeInsets.all(0),
         leading: Stack(
           children: [
-            const CircleAvatar(
-              backgroundImage: Svg("assets/images/flutter.svg"),
+            CircleAvatar(
+              backgroundImage: TodoImage.userProfile(widget.uid),
               radius: 25,
             ),
             Positioned(
@@ -131,27 +133,27 @@ class _ChatItemState extends State<ChatItem> {
             widget.counter == 0
                 ? const SizedBox()
                 : Container(
-              padding: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              constraints: const BoxConstraints(
-                minWidth: 11,
-                minHeight: 11,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 1, left: 5, right: 5),
-                child: Text(
-                  "${widget.counter}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
+                    padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 11,
+                      minHeight: 11,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 1, left: 5, right: 5),
+                      child: Text(
+                        "${widget.counter}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
           ],
         ),
         onTap: widget.onTap,
