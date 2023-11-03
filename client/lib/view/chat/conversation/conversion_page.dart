@@ -50,13 +50,13 @@ class _ConversationState extends State<Conversation> {
                       icon: Icons.chat,
                       desc: 'try_post_message'.tr,
                       what: '',
-                      render: controller.chats.value.isNotEmpty,
+                      render: controller.pagination.data.value.isNotEmpty,
                       child: ListView.separated(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        itemCount: controller.chats.value.length,
+                        itemCount: controller.pagination.data.value.length,
                         reverse: true,
                         itemBuilder: (BuildContext context, int index) {
-                          Chat chat = controller.chats.value[index];
+                          Chat chat = controller.pagination.data.value[index];
                           return reactiveChatBubble(chat);
                         },
                         separatorBuilder: (BuildContext context, int index) =>

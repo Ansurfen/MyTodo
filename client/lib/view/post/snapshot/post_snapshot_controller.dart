@@ -10,12 +10,14 @@ import 'package:my_todo/model/entity/post.dart';
 import 'package:my_todo/model/vo/post.dart';
 import 'package:my_todo/utils/dialog.dart';
 import 'package:my_todo/utils/guard.dart';
+import 'package:my_todo/utils/pagination.dart';
 
 class PostSnapshotController extends GetxController
     with GetTickerProviderStateMixin {
   Rx<List<GetPostDto>> data = Rx([]);
   late StreamSubscription<Post> _uploadPost;
   late TabController tabController;
+  Pagination<GetPostDto> pagination = Pagination(index: 1);
 
   @override
   void onInit() {
@@ -35,9 +37,12 @@ class PostSnapshotController extends GetxController
   }
 
   Future fetch() async {
-    return getPost(GetPostRequest(1, 10)).then((res) {
-      data.value = res.data;
-      data.refresh();
+    return getPost(GetPostRequest(pagination.index(), pagination.getLimit()))
+        .then((res) {
+      // data.value = res.data;
+      // data.refresh();
+      pagination.setData(res.data);
+      pagination.refresh();
     }).catchError((err) {
       showError(err);
     });

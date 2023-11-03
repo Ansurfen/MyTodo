@@ -7,11 +7,11 @@ import 'package:my_todo/model/entity/chat.dart';
 import 'package:my_todo/model/entity/user.dart';
 import 'package:my_todo/utils/dialog.dart';
 import 'package:my_todo/utils/guard.dart';
+import 'package:my_todo/utils/pagination.dart';
 
 class ConversionController extends GetxController {
   User user = User(0, "", "");
-  Rx<List<Chat>> chats = Rx([]);
-  int page = 0;
+  Pagination<Chat> pagination = Pagination();
   Rx<bool> show = false.obs;
   String replyID = '';
   TodoInputController todoInputController =
@@ -23,13 +23,15 @@ class ConversionController extends GetxController {
     if (Get.arguments != null && Get.arguments is User) {
       user = Get.arguments;
       fetchChats().then((res) {
-        chats.value = res.chats;
+        // chats.value = res.chats;
+        pagination.setData(res.chats);
       });
     } else {
       userInfo(int.parse(Get.parameters["id"]!)).then((res) {
         user = res;
         fetchChats().then((res) {
-          chats.value = res.chats;
+          // chats.value = res.chats;
+          pagination.setData(res.chats);
         });
       });
     }
@@ -42,9 +44,9 @@ class ConversionController extends GetxController {
   }
 
   Future<GetChatResponse> fetchChats() {
-    page++;
+    pagination.inc();
     return getChat(GetChatRequest(
-        from: Guard.user, to: user.id, page: page, pageSize: 10));
+        from: Guard.user, to: user.id, page: pagination.index(), pageSize: 10));
   }
 
   Future sendMessage(String v) {
@@ -61,23 +63,30 @@ class ConversionController extends GetxController {
         msg.content = ["0001$e"];
       }
       msg.time = DateTime.now();
-      chats.value.insert(0, msg);
-      chats.refresh();
+      // chats.value.insert(0, msg);
+      // chats.refresh();
+      pagination.data.value.insert(0, msg);
+      pagination.refresh();
     }).onError((error, stackTrace) {
       showError(error.toString());
     });
   }
 
   Future requestHistory() {
-    page++;
+    pagination.inc();
     return getChat(GetChatRequest(
-            from: Guard.user, to: user.id, page: page, pageSize: 10))
+            from: Guard.user,
+            to: user.id,
+            page: pagination.index(),
+            pageSize: 10))
         .then((res) {
       if (res.chats.isNotEmpty) {
-        chats.value.addAll(res.chats);
-        chats.refresh();
+        // chats.value.addAll(res.chats);
+        // chats.refresh();
+        pagination.data.value.addAll(res.chats);
+        pagination.refresh();
       } else {
-        page--;
+        pagination.dec();
         showError("no_more".tr);
       }
     });
