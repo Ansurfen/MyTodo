@@ -57,6 +57,14 @@ func DeleteTask(req api.TaskDeleteRequest) (api.TaskDeleteResponse, error) {
 	return api.TaskDeleteResponse{}, nil
 }
 
+// @Summary Info Task
+// @Description Info task
+// @Tags Task
+// @Param id query int true "id"
+// @Param x-token header string true "x-token"
+// @Success 200 {string} Success
+// @failure 200 {object} string
+// @Router /task/info [get]
 func InfoTask(ctx starter.TodoContext, req api.TaskInfoRequest) (interfaces.Response, error) {
 	uc, err := userController.Get(ctx)
 	if err != nil {
@@ -112,7 +120,7 @@ func CommitTask(
 	if err != nil {
 		return api.TaskCommitResponse{}, err
 	}
-	// validates whether the condition matches
+	// validates what the condition matches
 	param := ""
 	switch req.Type {
 	case po.COND_CONTENT:
@@ -156,7 +164,10 @@ func CommitTask(
 	case po.COND_QR:
 		res := strings.Split(req.Param, ",")
 		key := fmt.Sprintf("qr_%s", res[0])
-		taskController.Get(ctx).CreateCommit(int(uc.User.ID), req.TID, req.Type, "")
+		err = taskController.Get(ctx).CreateCommit(int(uc.User.ID), req.TID, req.Type, "")
+		if err != nil {
+			return api.TaskCommitResponse{Param: "system error. please try again"}, nil
+		}
 		if db.Redis().Get(key) == res[1] {
 			return api.TaskCommitResponse{}, nil
 		}

@@ -1476,6 +1476,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/task/info": {
+            "get": {
+                "description": "Info task",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Info Task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "x-token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/task/locate/{id}": {
             "get": {
                 "description": "get task image of location",

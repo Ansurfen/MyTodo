@@ -61,6 +61,12 @@ class _TaskInfoPageState extends State<TaskInfoPage>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
@@ -416,10 +422,10 @@ class _TaskInfoPageState extends State<TaskInfoPage>
         ),
       ),
       Padding(
-          padding: EdgeInsets.only(left: 5),
+          padding: const EdgeInsets.only(left: 5),
           child: Text(
-            "name",
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 28),
+            controller.task.name,
+            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 28),
           ))
     ]);
   }
@@ -496,7 +502,7 @@ class _TaskInfoPageState extends State<TaskInfoPage>
         ));
   }
 
-  ListView taskForms(ValueChanged<TaskForm> onTap) {
+  Widget taskForms(ValueChanged<TaskForm> onTap) {
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,

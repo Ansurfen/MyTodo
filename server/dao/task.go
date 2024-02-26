@@ -47,7 +47,8 @@ func (t *TaskDao) Find(page, limit int) (ret []po.Task, err error) {
 }
 
 func (t *TaskDao) FindById(id int) (ret TaskDao, err error) {
-	err = db.SQL().Find(&ret).Where("id = ?", ret.ID).Error
+	ret.ID = uint(id)
+	err = db.SQL().Find(&ret).Error
 	return
 }
 
